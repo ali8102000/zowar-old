@@ -1,35 +1,80 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zowar - شبكتك الاجتماعية العالمية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zowar - عالمك الاجتماعي المتكامل</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
+            --primary-dark: #3a56d4;
             --secondary: #3f37c9;
             --accent: #4895ef;
+            --accent-light: #5fa8f3;
             --text: #2b2d42;
+            --text-light: #6c757d;
             --light: #f8f9fa;
+            --lighter: #fefefe;
             --dark: #212529;
+            --darker: #1a1d20;
             --success: #4cc9f0;
             --danger: #f72585;
             --warning: #f8961e;
+            --gold: #ffd700;
+            
+            /* ألوان خاصة بالأقسام */
+            --home-bg: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+            --home-accent: var(--primary);
+            --explore-bg: linear-gradient(135deg, #fff9f0 0%, #fff4e6 100%);
+            --explore-accent: var(--warning);
+            --games-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --games-accent: var(--gold);
+            --tutoring-bg: linear-gradient(135deg, #f0f9ff 0%, #e6f4ff 100%);
+            --tutoring-accent: #4e7cff;
+            --messages-bg: linear-gradient(135deg, #f0fffc 0%, #e6fff8 100%);
+            --messages-accent: #00b894;
+            --profile-bg: linear-gradient(135deg, #fff0f5 0%, #ffe6ee 100%);
+            --profile-accent: var(--danger);
+            
+            /* الظلال */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .dark-mode {
+            --primary: #5a72f0;
+            --primary-dark: #4d67e6;
+            --secondary: #5645dd;
+            --accent: #60a8f8;
+            --accent-light: #75b5fa;
+            --text: #f8f9fa;
+            --text-light: #adb5bd;
+            --light: #2b2d42;
+            --lighter: #343a40;
+            --dark: #1a1d20;
+            --darker: #121417;
+            
+            --home-bg: linear-gradient(135deg, #1a1d3a 0%, #1a1a2e 100%);
+            --explore-bg: linear-gradient(135deg, #2a211a 0%, #1e1a16 100%);
+            --tutoring-bg: linear-gradient(135deg, #1a1d3a 0%, #1a1a2e 100%);
+            --messages-bg: linear-gradient(135deg, #1a3a30 0%, #1a2e28 100%);
+            --profile-bg: linear-gradient(135deg, #3a1a2a 0%, #2e1a22 100%);
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--light);
             color: var(--text);
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode {
-            background-color: var(--dark);
-            color: var(--light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: contain;
         }
 
         .app-container {
@@ -37,63 +82,77 @@
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+            box-shadow: var(--shadow-xl);
         }
 
+        /* تصميم الهيدر */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .header {
+            background-color: rgba(30, 30, 30, 0.8);
+        }
+
+        .header-title {
+            font-weight: 900;
+            font-size: 1.75rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dark-mode .header-title {
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        /* تصميم الأقسام */
         .section {
             display: none;
-            padding-bottom: 70px;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            animation: fadeInUp 0.5s ease;
         }
 
         .section.active {
             display: block;
         }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 450px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0,0,0,0.1);
-            z-index: 100;
+        #home-section.active {
+            background: var(--home-bg);
         }
 
-        .dark-mode .bottom-nav {
-            background: rgba(33,37,41,0.95);
-            border-color: rgba(255,255,255,0.1);
+        #explore-section.active {
+            background: var(--explore-bg);
         }
 
-        .nav-item {
-            position: relative;
-            padding: 12px 0;
-            color: #6c757d;
-            transition: all 0.3s ease;
+        #games-section.active {
+            background: var(--games-bg);
+            color: white;
         }
 
-        .nav-item.active {
-            color: var(--primary);
+        #tutoring-section.active {
+            background: var(--tutoring-bg);
         }
 
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
+        #messages-section.active {
+            background: var(--messages-bg);
         }
 
+        #profile-section.active {
+            background: var(--profile-bg);
+        }
+
+        /* تصميم القصص */
         .story-circle {
             width: 72px;
             height: 72px;
@@ -101,317 +160,695 @@
             padding: 3px;
             background: linear-gradient(45deg, var(--accent), var(--danger));
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
         }
 
         .story-circle:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
-        .post-card {
-            background: white;
+        .story-circle img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+
+        .dark-mode .story-circle img {
+            border-color: var(--dark);
+        }
+
+        /* تصميم البطاقات */
+        .card {
+            background: var(--lighter);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-md);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
         }
 
-        .dark-mode .post-card {
-            background: #2b2d42;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .post-card:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-lg);
         }
 
-        .chat-bubble {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            margin-bottom: 8px;
+        .dark-mode .card {
+            background: var(--darker);
+        }
+
+        /* تصميم الأزرار */
+        .btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
-            animation: messageIn 0.3s ease;
+            overflow: hidden;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        @keyframes messageIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        .chat-bubble.sent {
-            background: var(--primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .chat-bubble.received {
-            background: #e9ecef;
-            color: var(--text);
-            margin-right: auto;
-            border-bottom-left-radius: 4px;
-        }
-
-        .dark-mode .chat-bubble.received {
-            background: #343a40;
+        .btn-primary {
+            background-color: var(--primary);
             color: white;
         }
 
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-light);
+        }
+
+        /* تأثيرات النقر */
+        .click-effect {
+            transition: transform 0.2s ease;
+        }
+
+        .click-effect:active {
+            transform: scale(0.95);
+        }
+
+        /* شريط التصفح السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        }
+
+        .dark-mode .bottom-nav {
+            background: rgba(30, 30, 30, 0.95);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 8px 0;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.15) translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.75rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-text {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* تأثيرات الصوت */
         .voice-message {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            border-radius: 18px;
+            padding: 10px 16px;
+            border-radius: 24px;
             background: var(--primary);
             color: white;
             width: fit-content;
+            max-width: 200px;
+            margin-left: auto;
         }
 
         .waveform {
             display: flex;
             align-items: center;
-            height: 20px;
+            height: 24px;
         }
 
         .waveform span {
             display: inline-block;
             width: 3px;
-            margin: 0 1px;
+            margin: 0 1.5px;
             background: white;
+            border-radius: 3px;
             animation: wave 1.2s infinite ease-in-out;
         }
 
-        .waveform span:nth-child(1) { height: 10px; animation-delay: 0s; }
-        .waveform span:nth-child(2) { height: 15px; animation-delay: 0.2s; }
-        .waveform span:nth-child(3) { height: 20px; animation-delay: 0.4s; }
-        .waveform span:nth-child(4) { height: 15px; animation-delay: 0.6s; }
-        .waveform span:nth-child(5) { height: 10px; animation-delay: 0.8s; }
-
-        @keyframes wave {
-            0%, 100% { transform: scaleY(0.5); }
-            50% { transform: scaleY(1.5); }
+        .waveform span:nth-child(2) {
+            animation-delay: 0.2s;
         }
 
-        .reaction-emoji {
+        .waveform span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .waveform span:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 40%; }
+            50% { height: 100%; }
+        }
+
+        /* الرسائل */
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            position: relative;
+            animation: messageIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .message-bubble.sent {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 8px;
+        }
+
+        .message-bubble.received {
+            background: var(--light);
+            color: var(--text);
+            margin-right: auto;
+            border-bottom-left-radius: 8px;
+        }
+
+        .dark-mode .message-bubble.received {
+            background: var(--darker);
+            color: var(--text);
+        }
+
+        /* المؤشرات */
+        .badge {
             position: absolute;
-            bottom: -8px;
-            right: -8px;
-            background: white;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .dark-mode .reaction-emoji {
-            background: #495057;
+        /* تأثيرات التحميل */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
 
-        .language-selector {
-            position: relative;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .language-dropdown {
-            position: absolute;
-            top: 100%;
+        /* تأثيرات الإدخال */
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: var(--lighter);
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .dark-mode .input-field {
+            background: var(--darker);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        /* تأثيرات الإشعارات */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .notification i {
+            margin-left: 8px;
+        }
+
+        /* تأثيرات خاصة بالأقسام */
+        .game-card {
+            background: var(--lighter);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dark-mode .game-card {
+            background: var(--darker);
+        }
+
+        .game-card i {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--games-accent);
+        }
+
+        .game-card h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .game-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* تصميم قسم التدريس */
+        .tutoring-card {
+            background: var(--lighter);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .tutoring-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dark-mode .tutoring-card {
+            background: var(--darker);
+        }
+
+        .tutoring-card i {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--tutoring-accent);
+        }
+
+        /* تأثيرات النص */
+        .text-gradient {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* تأثيرات الصور */
+        .img-hover-zoom {
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .img-hover-zoom img {
+            transition: transform 0.5s ease;
+        }
+
+        .img-hover-zoom:hover img {
+            transform: scale(1.05);
+        }
+
+        /* تأثيرات المودال */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
             right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            z-index: 100;
-            display: none;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 16px;
         }
 
-        .dark-mode .language-dropdown {
-            background: #343a40;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .language-selector:hover .language-dropdown {
-            display: block;
+        .modal-content {
+            background: var(--lighter);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow-xl);
         }
 
-        /* Animations */
-        .pulse {
-            animation: pulse 1.5s infinite;
+        .modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .dark-mode .modal-content {
+            background: var(--darker);
+        }
+
+        /* تأثيرات المكالمات */
+        .call-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .call-screen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* تأثيرات القصص */
+        .story-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: black;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .story-viewer.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* تأثيرات التمرير */
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        /* تأثيرات خاصة بالهاتف */
+        @media (max-width: 640px) {
+            .app-container {
+                max-width: 100%;
+                border-radius: 0;
+            }
+        }
+
+        /* تأثيرات الحركة */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
 
-        .shake {
-            animation: shake 0.5s;
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+        /* تأثيرات خاصة بالظهور */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* تأثيرات خاصة بالاختفاء */
+        .fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
     </style>
 </head>
 <body class="dark-mode">
-    <div class="app-container">
-        <!-- شاشة التحميل -->
-        <div id="splash-screen" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white z-50 transition-opacity duration-500">
-            <div class="text-center">
-                <h1 class="text-5xl font-bold mb-2 animate-bounce">Zowar</h1>
-                <p class="text-xl opacity-90">اتصل. شارك. استكشف.</p>
-                <div class="mt-8">
-                    <div class="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin mx-auto"></div>
-                </div>
-            </div>
+    <!-- شاشة التحميل -->
+    <div id="splash-screen" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white z-50 transition-opacity duration-500">
+        <div class="text-center animate__animated animate__fadeIn">
+            <h1 class="text-5xl font-bold mb-2 animate__animated animate__bounceIn">Zowar</h1>
+            <p class="text-xl opacity-90 mb-8">عالمك الاجتماعي المتكامل</p>
+            <div class="loader mx-auto"></div>
         </div>
+    </div>
 
-        <!-- الهيدر الرئيسي -->
-        <header class="p-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md sticky top-0 z-10 shadow-sm flex justify-between items-center">
-            <button id="menu-btn" class="text-xl">
+    <!-- التطبيق الرئيسي -->
+    <div class="app-container">
+        <!-- الهيدر -->
+        <header class="header p-4 flex justify-between items-center">
+            <button id="menu-btn" class="text-2xl click-effect">
                 <i class="fas fa-bars"></i>
             </button>
             
-            <h1 class="text-xl font-bold text-[var(--primary)] dark:text-[var(--accent)] flex items-center">
-                <i class="fas fa-globe mr-2"></i> Zowar
-            </h1>
+            <h1 class="header-title">Zowar</h1>
             
-            <div class="flex items-center space-x-3">
-                <button id="notifications-btn" class="relative">
+            <div class="flex items-center space-x-4">
+                <button id="notifications-btn" class="relative click-effect">
                     <i class="fas fa-bell text-xl"></i>
-                    <span id="notification-badge" class="absolute -top-1 -right-1 bg-[var(--danger)] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">3</span>
+                    <span id="notification-badge" class="badge hidden">3</span>
                 </button>
-                <div class="language-selector">
-                    <button id="language-btn" class="flex items-center">
-                        <i class="fas fa-language text-xl"></i>
-                    </button>
-                    <div class="language-dropdown p-2 w-40">
-                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
-                            <span class="ml-2">🇸🇦</span> العربية
-                        </button>
-                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
-                            <span class="ml-2">🇺🇸</span> English
-                        </button>
-                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
-                            <span class="ml-2">🇫🇷</span> Français
-                        </button>
-                    </div>
-                </div>
+                <button id="search-btn" class="click-effect">
+                    <i class="fas fa-search text-xl"></i>
+                </button>
             </div>
         </header>
 
         <!-- القائمة الجانبية -->
         <div id="side-menu" class="fixed inset-0 bg-black/50 z-40 hidden">
-            <div class="absolute right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl">
+            <div class="absolute right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out translate-x-full">
                 <div class="p-4 flex justify-between items-center border-b dark:border-gray-700">
                     <h2 class="text-xl font-bold">القائمة</h2>
-                    <button id="close-menu" class="text-2xl">&times;</button>
+                    <button id="close-menu" class="text-2xl click-effect">&times;</button>
                 </div>
-                <div class="p-4">
-                    <div class="flex items-center space-x-3 mb-6">
+                <div class="p-4 overflow-y-auto h-full">
+                    <div class="flex items-center space-x-3 mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
                         <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 rounded-full object-cover border-2 border-[var(--primary)]">
                         <div>
                             <h3 class="font-bold">أحمد محمد</h3>
-                            <p class="text-sm text-gray-500">@ahmed</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">@ahmed</p>
                         </div>
                     </div>
                     
-                    <nav class="space-y-2">
-                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-user mr-2"></i> الملف الشخصي
+                    <nav class="space-y-1">
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-user mr-3 text-lg w-6 text-center"></i> 
+                            <span>الملف الشخصي</span>
                         </a>
-                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-cog mr-2"></i> الإعدادات
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-users mr-3 text-lg w-6 text-center"></i> 
+                            <span>الأصدقاء</span>
                         </a>
-                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-moon mr-2"></i> الوضع الليلي
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-cog mr-3 text-lg w-6 text-center"></i> 
+                            <span>الإعدادات</span>
                         </a>
-                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-globe mr-2"></i> اللغة
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-moon mr-3 text-lg w-6 text-center"></i> 
+                            <span>الوضع الليلي</span>
                         </a>
-                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-question-circle mr-2"></i> المساعدة
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-globe mr-3 text-lg w-6 text-center"></i> 
+                            <span>اللغة</span>
                         </a>
-                        <button id="logout-btn" class="w-full text-left p-3 rounded-lg text-[var(--danger)] hover:bg-red-50 dark:hover:bg-red-900/20">
-                            <i class="fas fa-sign-out-alt mr-2"></i> تسجيل الخروج
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 click-effect transition flex items-center">
+                            <i class="fas fa-question-circle mr-3 text-lg w-6 text-center"></i> 
+                            <span>المساعدة</span>
+                        </a>
+                        <button id="logout-btn" class="w-full text-left p-3 rounded-lg text-[var(--danger)] hover:bg-red-50 dark:hover:bg-red-900/20 click-effect transition flex items-center">
+                            <i class="fas fa-sign-out-alt mr-3 text-lg w-6 text-center"></i> 
+                            <span>تسجيل الخروج</span>
                         </button>
                     </nav>
+                    
+                    <div class="mt-8 p-4 border-t dark:border-gray-700">
+                        <h3 class="font-bold mb-3">حول Zowar</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            Zowar هي منصة اجتماعية متكاملة تتيح لك التواصل مع الأصدقاء، مشاركة اللحظات، والاستمتاع بتجربة فريدة.
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
+                            الإصدار 2.0.1 | &copy; 2023 Zowar Team
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- الأقسام الرئيسية -->
-        <main class="relative">
+        <main class="relative scroll-smooth">
             <!-- قسم الرئيسية -->
             <section id="home-section" class="section active">
                 <!-- القصص -->
                 <div class="stories-container p-4 overflow-x-auto">
-                    <div class="flex space-x-4">
+                    <div class="flex space-x-4 rtl:space-x-reverse">
                         <!-- قصة المستخدم -->
-                        <div class="flex flex-col items-center space-y-1">
-                            <div class="story-circle flex items-center justify-center bg-gradient-to-tr from-[var(--accent)] to-[var(--danger)]">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle flex items-center justify-center bg-gradient-to-tr from-[var(--accent)] to-[var(--danger)] click-effect">
                                 <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
                                     <i class="fas fa-plus text-[var(--primary)]"></i>
                                 </div>
                             </div>
-                            <span class="text-xs">قصتك</span>
+                            <span class="text-xs font-medium">قصتك</span>
                         </div>
                         
                         <!-- قصص الأصدقاء -->
-                        <div class="flex flex-col items-center space-y-1">
-                            <div class="story-circle">
-                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-full h-full rounded-full object-cover">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle click-effect">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="سارة">
                             </div>
-                            <span class="text-xs">سارة</span>
+                            <span class="text-xs font-medium">سارة</span>
                         </div>
                         
-                        <div class="flex flex-col items-center space-y-1">
-                            <div class="story-circle">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" class="w-full h-full rounded-full object-cover">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle click-effect">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="محمد">
                             </div>
-                            <span class="text-xs">محمد</span>
+                            <span class="text-xs font-medium">محمد</span>
                         </div>
                         
-                        <div class="flex flex-col items-center space-y-1">
-                            <div class="story-circle">
-                                <img src="https://randomuser.me/api/portraits/women/33.jpg" class="w-full h-full rounded-full object-cover">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle click-effect">
+                                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="نورا">
                             </div>
-                            <span class="text-xs">نورا</span>
+                            <span class="text-xs font-medium">نورا</span>
                         </div>
                         
-                        <div class="flex flex-col items-center space-y-1">
-                            <div class="story-circle">
-                                <img src="https://randomuser.me/api/portraits/men/55.jpg" class="w-full h-full rounded-full object-cover">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle click-effect">
+                                <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="خالد">
                             </div>
-                            <span class="text-xs">خالد</span>
+                            <span class="text-xs font-medium">خالد</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="story-circle click-effect">
+                                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="لمى">
+                            </div>
+                            <span class="text-xs font-medium">لمى</span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- إنشاء منشور -->
-                <div class="create-post-container p-4">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
-                            <button id="open-create-post" class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full py-2 px-4 text-right text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                <div class="create-post-container px-4">
+                    <div class="card">
+                        <div class="flex items-center space-x-3 p-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full">
+                            <button id="open-create-post" class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full py-3 px-4 text-right text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition click-effect">
                                 ما الذي يدور في ذهنك؟
                             </button>
                         </div>
-                        <div class="flex justify-between mt-3 pt-3 border-t dark:border-gray-700">
-                            <button class="flex items-center justify-center flex-1 text-[var(--danger)]">
-                                <i class="fas fa-image mr-1"></i> صورة
+                        <div class="flex justify-between p-3 pt-0 border-t dark:border-gray-700">
+                            <button class="flex items-center justify-center flex-1 text-[var(--danger)] click-effect">
+                                <i class="fas fa-image mr-2"></i> صورة
                             </button>
-                            <button class="flex items-center justify-center flex-1 text-[var(--success)]">
-                                <i class="fas fa-user-tag mr-1"></i> أشخاص
+                            <button class="flex items-center justify-center flex-1 text-[var(--success)] click-effect">
+                                <i class="fas fa-user-tag mr-2"></i> أشخاص
                             </button>
-                            <button class="flex items-center justify-center flex-1 text-[var(--warning)]">
-                                <i class="fas fa-smile mr-1"></i> مشاعر
+                            <button class="flex items-center justify-center flex-1 text-[var(--warning)] click-effect">
+                                <i class="fas fa-smile mr-2"></i> مشاعر
                             </button>
                         </div>
                     </div>
@@ -430,7 +867,7 @@
                     
                     <!-- شريط البحث -->
                     <div class="relative mb-6">
-                        <input type="text" placeholder="ابحث عن أشخاص أو أماكن..." class="w-full bg-gray-100 dark:bg-gray-700 rounded-full py-3 px-5 pl-12 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]">
+                        <input type="text" placeholder="ابحث عن أشخاص أو أماكن..." class="w-full bg-gray-100 dark:bg-gray-700 rounded-full py-3 px-5 pl-12 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] input-field">
                         <i class="fas fa-search absolute right-4 top-3.5 text-gray-400"></i>
                     </div>
                     
@@ -438,16 +875,16 @@
                     <div class="mb-6">
                         <h3 class="font-bold mb-3">تصفح حسب الفئة</h3>
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="category-card bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                            <div class="category-card bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition click-effect">
                                 <h4>السفر</h4>
                             </div>
-                            <div class="category-card bg-gradient-to-br from-[var(--danger)] to-[var(--warning)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                            <div class="category-card bg-gradient-to-br from-[var(--danger)] to-[var(--warning)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition click-effect">
                                 <h4>الطعام</h4>
                             </div>
-                            <div class="category-card bg-gradient-to-br from-[var(--success)] to-[#4ad66d] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                            <div class="category-card bg-gradient-to-br from-[var(--success)] to-[#4ad66d] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition click-effect">
                                 <h4>التكنولوجيا</h4>
                             </div>
-                            <div class="category-card bg-gradient-to-br from-[#7209b7] to-[#b5179e] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                            <div class="category-card bg-gradient-to-br from-[#7209b7] to-[#b5179e] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition click-effect">
                                 <h4>الرياضة</h4>
                             </div>
                         </div>
@@ -463,6 +900,120 @@
                 </div>
             </section>
 
+            <!-- قسم الألعاب -->
+            <section id="games-section" class="section">
+                <div class="p-4">
+                    <h2 class="text-2xl font-bold mb-6 text-center text-[var(--games-accent)]">Zowar Play 🎮</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="game-card click-effect" data-game="ludo">
+                            <i class="fas fa-dice"></i>
+                            <h3 class="font-bold">يلا لودو</h3>
+                            <p class="text-sm text-gray-300">لعبة الطاولة الكلاسيكية</p>
+                        </div>
+                        
+                        <div class="game-card click-effect" data-game="snakes-ladders">
+                            <i class="fas fa-snake"></i>
+                            <h3 class="font-bold">حية ودرج</h3>
+                            <p class="text-sm text-gray-300">تحدي الحظ والاستراتيجية</p>
+                        </div>
+                        
+                        <div class="game-card click-effect" data-game="basketball">
+                            <i class="fas fa-basketball-ball"></i>
+                            <h3 class="font-bold">رميات السلة</h3>
+                            <p class="text-sm text-gray-300">اختبر مهاراتك</p>
+                        </div>
+                        
+                        <div class="game-card click-effect" data-game="quiz">
+                            <i class="fas fa-question-circle"></i>
+                            <h3 class="font-bold">أسئلة عامة</h3>
+                            <p class="text-sm text-gray-300">اختبر معلوماتك</p>
+                        </div>
+                    </div>
+                    
+                    <!-- غرفة الألعاب -->
+                    <div id="game-room" class="mt-6 p-4 bg-white/10 rounded-xl" style="display: none;">
+                        <h3 id="game-room-title" class="font-bold mb-4 text-center"></h3>
+                        <div id="game-room-content" class="mb-4"></div>
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <button id="exit-game-btn" class="btn bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 flex-1 click-effect">
+                                خروج
+                            </button>
+                            <button id="start-game-btn" class="btn bg-[var(--games-accent)] text-gray-900 flex-1 click-effect">
+                                ابدأ اللعب
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم التدريس -->
+            <section id="tutoring-section" class="section">
+                <div class="p-4">
+                    <h2 class="text-2xl font-bold mb-6 text-center text-[var(--tutoring-accent)]">مركز Zowar التعليمي 📚</h2>
+                    
+                    <div class="flex mb-6 bg-gray-100 dark:bg-gray-700 rounded-full p-1">
+                        <button id="student-btn" class="btn flex-1 rounded-full click-effect">طالب</button>
+                        <button id="teacher-btn" class="btn flex-1 rounded-full click-effect">معلّم</button>
+                    </div>
+                    
+                    <!-- واجهة الطالب -->
+                    <div id="student-view">
+                        <h3 class="font-bold mb-4">اختر المادة الدراسية:</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="tutoring-card click-effect" data-subject="math">
+                                <i class="fas fa-square-root-alt"></i>
+                                <h3 class="font-bold">الرياضيات</h3>
+                            </div>
+                            <div class="tutoring-card click-effect" data-subject="science">
+                                <i class="fas fa-flask"></i>
+                                <h3 class="font-bold">العلوم</h3>
+                            </div>
+                            <div class="tutoring-card click-effect" data-subject="arabic">
+                                <i class="fas fa-language"></i>
+                                <h3 class="font-bold">اللغة العربية</h3>
+                            </div>
+                            <div class="tutoring-card click-effect" data-subject="islamic">
+                                <i class="fas fa-mosque"></i>
+                                <h3 class="font-bold">الدراسات الإسلامية</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- واجهة المعلم -->
+                    <div id="teacher-view" style="display: none;">
+                        <h3 class="font-bold mb-4">إدارة الدروس:</h3>
+                        <button id="create-lesson-btn" class="btn btn-primary w-full mb-4 click-effect">
+                            <i class="fas fa-plus mr-2"></i> إنشاء درس جديد
+                        </button>
+                        
+                        <div class="card">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-2">الدروس النشطة</h4>
+                                <p class="text-gray-500 dark:text-gray-400">لا توجد دروس نشطة حالياً</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- تفاصيل المادة -->
+                    <div id="subject-details" class="mt-6 card" style="display: none;">
+                        <div class="p-4">
+                            <h3 id="subject-title" class="font-bold text-xl mb-3"></h3>
+                            <p id="subject-description" class="text-gray-700 dark:text-gray-300"></p>
+                            
+                            <div class="mt-4">
+                                <button id="join-lesson-btn" class="btn btn-primary w-full mb-2 click-effect">
+                                    <i class="fas fa-video mr-2"></i> الانضمام إلى الحصة
+                                </button>
+                                <button id="view-materials-btn" class="btn btn-secondary w-full click-effect">
+                                    <i class="fas fa-book mr-2"></i> عرض المواد التعليمية
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- قسم الرسائل -->
             <section id="messages-section" class="section">
                 <div class="p-4">
@@ -470,33 +1021,14 @@
                     
                     <!-- علامات التبويب -->
                     <div class="flex border-b dark:border-gray-700 mb-4">
-                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">الكل</button>
-                        <button class="tab-btn py-2 px-4 font-medium">غير المقروء</button>
-                        <button class="tab-btn py-2 px-4 font-medium">المجموعات</button>
+                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--messages-accent)] click-effect">الكل</button>
+                        <button class="tab-btn py-2 px-4 font-medium click-effect">غير المقروء</button>
+                        <button class="tab-btn py-2 px-4 font-medium click-effect">المجموعات</button>
                     </div>
                     
                     <!-- قائمة المحادثات -->
                     <div id="conversations-list" class="space-y-3">
                         <!-- سيتم إضافة المحادثات ديناميكياً -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- قسم الإشعارات -->
-            <section id="notifications-section" class="section">
-                <div class="p-4">
-                    <h2 class="text-xl font-bold mb-4">الإشعارات</h2>
-                    
-                    <!-- علامات التبويب -->
-                    <div class="flex border-b dark:border-gray-700 mb-4">
-                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">الكل</button>
-                        <button class="tab-btn py-2 px-4 font-medium">غير المقروء</button>
-                        <button class="tab-btn py-2 px-4 font-medium">الطلبات</button>
-                    </div>
-                    
-                    <!-- قائمة الإشعارات -->
-                    <div id="notifications-list" class="space-y-4">
-                        <!-- سيتم إضافة الإشعارات ديناميكياً -->
                     </div>
                 </div>
             </section>
@@ -508,207 +1040,238 @@
                     <div class="flex flex-col items-center mb-6">
                         <div class="relative mb-4">
                             <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow">
-                            <button class="absolute bottom-0 right-0 bg-[var(--primary)] text-white w-8 h-8 rounded-full flex items-center justify-center">
+                            <button class="absolute bottom-0 right-0 bg-[var(--profile-accent)] text-white w-8 h-8 rounded-full flex items-center justify-center click-effect">
                                 <i class="fas fa-camera text-sm"></i>
                             </button>
                         </div>
                         <h2 class="text-xl font-bold">أحمد محمد</h2>
-                        <p class="text-gray-500">@ahmed</p>
+                        <p class="text-gray-500 dark:text-gray-400">@ahmed</p>
                         <p class="text-center mt-2 max-w-md">مطور ويب ومصمم، أعشق السفر والتكنولوجيا</p>
                         
                         <div class="flex space-x-4 mt-4">
-                            <button class="bg-[var(--primary)] text-white px-4 py-1.5 rounded-full text-sm">
+                            <button class="bg-[var(--profile-accent)] text-white px-4 py-1.5 rounded-full text-sm click-effect">
                                 <i class="fas fa-user-edit mr-1"></i> تعديل الملف
                             </button>
-                            <button class="bg-gray-100 dark:bg-gray-700 px-4 py-1.5 rounded-full text-sm">
+                            <button class="bg-gray-100 dark:bg-gray-700 px-4 py-1.5 rounded-full text-sm click-effect">
                                 <i class="fas fa-share-alt mr-1"></i> مشاركة
                             </button>
                         </div>
                     </div>
                     
                     <!-- الإحصائيات -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mb-6">
-                        <div class="grid grid-cols-3 divide-x dark:divide-gray-700 text-center">
+                    <div class="card mb-6">
+                        <div class="grid grid-cols-3 divide-x dark:divide-gray-700 text-center p-4">
                             <div class="px-2">
                                 <div class="font-bold">1,234</div>
-                                <div class="text-xs text-gray-500">المتابعون</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">المتابعون</div>
                             </div>
                             <div class="px-2">
                                 <div class="font-bold">567</div>
-                                <div class="text-xs text-gray-500">يتبع</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">يتبع</div>
                             </div>
                             <div class="px-2">
                                 <div class="font-bold">89</div>
-                                <div class="text-xs text-gray-500">المنشورات</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">المنشورات</div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- علامات التبويب -->
                     <div class="flex border-b dark:border-gray-700 mb-4">
-                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">المنشورات</button>
-                        <button class="tab-btn py-2 px-4 font-medium">الصور</button>
-                        <button class="tab-btn py-2 px-4 font-medium">الفيديوهات</button>
+                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--profile-accent)] click-effect">المنشورات</button>
+                        <button class="tab-btn py-2 px-4 font-medium click-effect">الصور</button>
+                        <button class="tab-btn py-2 px-4 font-medium click-effect">الفيديوهات</button>
                     </div>
                     
-                    <!-- منشورات المستخدم -->
-                    <div class="grid grid-cols-3 gap-1">
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                    <!-- المحتوى -->
+                    <div id="profile-content" class="grid grid-cols-3 gap-1">
+                        <!-- سيتم إضافة المحتوى ديناميكياً -->
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- التنقل السفلي -->
-        <nav class="bottom-nav flex justify-around items-center">
-            <button data-section="home-section" class="nav-item active flex flex-col items-center">
-                <i class="fas fa-home text-xl"></i>
-                <span class="text-xs mt-1">الرئيسية</span>
-            </button>
-            <button data-section="explore-section" class="nav-item flex flex-col items-center">
-                <i class="fas fa-compass text-xl"></i>
-                <span class="text-xs mt-1">استكشف</span>
-            </button>
-            <button data-section="messages-section" class="nav-item flex flex-col items-center">
-                <i class="fas fa-comments text-xl"></i>
-                <span class="text-xs mt-1">الرسائل</span>
-            </button>
-            <button data-section="notifications-section" class="nav-item flex flex-col items-center">
-                <i class="fas fa-bell text-xl"></i>
-                <span class="text-xs mt-1">الإشعارات</span>
-            </button>
-            <button data-section="profile-section" class="nav-item flex flex-col items-center">
-                <i class="fas fa-user text-xl"></i>
-                <span class="text-xs mt-1">حسابي</span>
-            </button>
+        <!-- شريط التصفح السفلي -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-section="home-section">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-text">الرئيسية</span>
+            </div>
+            <div class="nav-item" data-section="explore-section">
+                <div class="nav-icon"><i class="fas fa-compass"></i></div>
+                <span class="nav-text">استكشف</span>
+            </div>
+            <div class="nav-item" data-section="games-section">
+                <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+                <span class="nav-text">ألعاب</span>
+            </div>
+            <div class="nav-item" data-section="tutoring-section">
+                <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span class="nav-text">التدريس</span>
+            </div>
+            <div class="nav-item" data-section="profile-section">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-text">الملف</span>
+            </div>
         </nav>
+    </div>
 
-        <!-- نافذة إنشاء منشور -->
-        <div id="create-post-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md overflow-hidden">
-                <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                    <button id="close-post-modal" class="text-gray-500">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <h3 class="font-bold">إنشاء منشور</h3>
-                    <button id="submit-post-btn" class="text-[var(--primary)] font-medium">نشر</button>
+    <!-- مودال إنشاء منشور -->
+    <div id="create-post-modal" class="modal">
+        <div class="modal-content">
+            <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold">إنشاء منشور جديد</h3>
+                <button id="close-create-post" class="text-2xl click-effect">&times;</button>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
+                    <span class="font-medium">أحمد محمد</span>
                 </div>
                 
-                <div class="p-4">
-                    <div class="flex items-start space-x-3">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
-                        <textarea id="post-text" class="flex-1 bg-transparent min-h-[100px] focus:outline-none" placeholder="ماذا تريد أن تنشر؟"></textarea>
-                    </div>
-                    
-                    <div id="post-preview" class="mt-4 rounded-xl overflow-hidden hidden">
-                        <img id="post-image-preview" class="w-full max-h-[300px] object-cover">
-                    </div>
+                <textarea id="post-text" class="w-full bg-gray-100 dark:bg-gray-700 rounded-lg p-3 mb-4 input-field" placeholder="ما الذي يدور في ذهنك؟" rows="4"></textarea>
+                
+                <div id="post-preview" class="mb-4 rounded-lg overflow-hidden hidden">
+                    <img id="post-image-preview" src="" class="w-full max-h-60 object-cover">
                 </div>
                 
-                <div class="p-3 border-t dark:border-gray-700 flex justify-between">
-                    <label class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                        <i class="fas fa-image text-[var(--success)]"></i>
-                        <input type="file" id="post-image-input" accept="image/*" class="hidden">
-                    </label>
-                    
-                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-user-tag text-[var(--primary)]"></i>
+                <div class="flex justify-between mb-4">
+                    <button id="add-image-btn" class="flex items-center text-[var(--primary)] click-effect">
+                        <i class="fas fa-image mr-2"></i> صورة
                     </button>
-                    
-                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-smile text-[var(--warning)]"></i>
+                    <button id="add-video-btn" class="flex items-center text-[var(--danger)] click-effect">
+                        <i class="fas fa-video mr-2"></i> فيديو
                     </button>
-                    
-                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-map-marker-alt text-[var(--danger)]"></i>
+                    <button id="add-location-btn" class="flex items-center text-[var(--success)] click-effect">
+                        <i class="fas fa-map-marker-alt mr-2"></i> موقع
+                    </button>
+                    <button id="add-feeling-btn" class="flex items-center text-[var(--warning)] click-effect">
+                        <i class="fas fa-smile mr-2"></i> شعور
                     </button>
                 </div>
-            </div>
-        </div>
-
-        <!-- نافذة المحادثة -->
-        <div id="chat-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex flex-col">
-            <!-- رأس المحادثة -->
-            <div class="bg-white dark:bg-gray-800 flex items-center p-3 shadow-sm">
-                <button id="back-to-messages" class="text-xl mr-2">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-                <img id="chat-user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full mr-3">
-                <div class="flex-1">
-                    <h3 id="chat-user-name" class="font-bold">سارة محمد</h3>
-                    <p id="chat-user-status" class="text-xs text-green-500">نشطة الآن</p>
-                </div>
-                <button class="text-gray-500 ml-3">
-                    <i class="fas fa-phone-alt"></i>
-                </button>
-                <button class="text-gray-500 ml-3">
-                    <i class="fas fa-video"></i>
-                </button>
-                <button class="text-gray-500 ml-3">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-            </div>
-            
-            <!-- الرسائل -->
-            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-900/20 space-y-3">
-                <!-- سيتم إضافة الرسائل ديناميكياً -->
-            </div>
-            
-            <!-- إدخال الرسالة -->
-            <div class="bg-white dark:bg-gray-800 p-3 flex items-center border-t dark:border-gray-700">
-                <button class="text-gray-500 mx-2">
-                    <i class="fas fa-plus-circle"></i>
-                </button>
-                <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center px-3">
-                    <button id="emoji-btn" class="text-gray-500 mr-2">
-                        <i class="fas fa-smile"></i>
-                    </button>
-                    <input type="text" id="message-input" class="flex-1 bg-transparent py-2 focus:outline-none" placeholder="اكتب رسالة...">
-                    <button id="voice-btn" class="text-gray-500 ml-2">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                </div>
-                <button id="send-message-btn" class="bg-[var(--primary)] text-white w-10 h-10 rounded-full flex items-center justify-center ml-2">
-                    <i class="fas fa-paper-plane"></i>
+                
+                <button id="submit-post-btn" class="btn btn-primary w-full click-effect">
+                    <i class="fas fa-paper-plane mr-2"></i> نشر
                 </button>
             </div>
         </div>
     </div>
 
-    <script>
-        // بيانات وهمية متطورة
-        const mockData = {
-            currentUser: {
-                id: 1,
-                name: "أحمد محمد",
-                username: "ahmed",
-                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-                bio: "مطور ويب ومصمم، أعشق السفر والتكنولوجيا",
-                followers: 1234,
-                following: 567,
-                postsCount: 89
-            },
+    <!-- مودال القصص -->
+    <div id="story-modal" class="modal">
+        <div class="modal-content p-0 bg-black">
+            <div id="story-content" class="relative h-full">
+                <img id="story-image" src="" class="w-full h-full object-contain">
+                <div class="absolute top-4 left-4 right-4 flex items-center">
+                    <img id="story-user-image" src="" class="w-8 h-8 rounded-full border-2 border-white">
+                    <span id="story-user-name" class="text-white ml-2 font-medium"></span>
+                    <span id="story-time" class="text-white text-sm ml-auto">الآن</span>
+                </div>
+                <button id="close-story" class="absolute top-4 right-4 text-white text-2xl click-effect">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال الرسائل -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content h-full max-h-screen flex flex-col">
+            <div class="p-4 border-b dark:border-gray-700 flex items-center">
+                <button id="back-to-conversations" class="text-xl mr-3 click-effect">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <img id="message-user-image" src="" class="w-10 h-10 rounded-full">
+                <div class="ml-3">
+                    <h3 id="message-user-name" class="font-bold"></h3>
+                    <p id="message-user-status" class="text-xs text-green-500">نشط الآن</p>
+                </div>
+                <button id="message-call-btn" class="ml-auto text-xl text-[var(--primary)] click-effect">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
             
+            <div id="messages-container" class="flex-grow p-4 overflow-y-auto">
+                <!-- سيتم إضافة الرسائل ديناميكياً -->
+            </div>
+            
+            <div class="p-3 border-t dark:border-gray-700 flex items-center">
+                <button id="message-add-btn" class="text-xl text-[var(--primary)] mx-2 click-effect">
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+                <input id="message-input" type="text" placeholder="اكتب رسالة..." class="flex-grow bg-gray-100 dark:bg-gray-700 rounded-full py-2 px-4 focus:outline-none input-field">
+                <button id="message-send-btn" class="text-xl text-[var(--primary)] mx-2 click-effect">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <button id="message-voice-btn" class="text-xl text-[var(--primary)] mx-2 click-effect">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال المكالمة -->
+    <div id="call-modal" class="modal">
+        <div class="modal-content bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white p-0 h-full flex flex-col items-center justify-center">
+            <div class="text-center">
+                <img id="call-user-image" src="" class="w-32 h-32 rounded-full border-4 border-white mx-auto mb-4">
+                <h2 id="call-user-name" class="text-2xl font-bold mb-1"></h2>
+                <p id="call-status" class="text-lg mb-8">جاري الاتصال...</p>
+                
+                <div class="flex justify-center space-x-6">
+                    <button class="bg-white/20 hover:bg-white/30 text-white w-14 h-14 rounded-full flex items-center justify-center click-effect">
+                        <i class="fas fa-microphone-slash"></i>
+                    </button>
+                    <button id="end-call-btn" class="bg-red-500 hover:bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl click-effect">
+                        <i class="fas fa-phone"></i>
+                    </button>
+                    <button class="bg-white/20 hover:bg-white/30 text-white w-14 h-14 rounded-full flex items-center justify-center click-effect">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الإشعارات -->
+    <div id="notification" class="notification hidden">
+        <i class="fas fa-bell"></i>
+        <span id="notification-text"></span>
+    </div>
+
+    <script>
+        // تهيئة البيانات
+        const mockData = {
             users: [
                 {
+                    id: 1,
+                    name: "أحمد محمد",
+                    username: "ahmed",
+                    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                    bio: "مطور ويب ومصمم، أعشق السفر والتكنولوجيا",
+                    followers: 1234,
+                    following: 567,
+                    posts: 89,
+                    online: true
+                },
+                {
                     id: 2,
-                    name: "سارة محمد",
+                    name: "سارة علي",
                     username: "sara",
                     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
                     bio: "مصممة جرافيك ومهتمة بالفنون",
+                    followers: 876,
+                    following: 321,
+                    posts: 45,
                     online: true
                 },
                 {
                     id: 3,
-                    name: "محمد علي",
+                    name: "محمد خالد",
                     username: "mohammed",
                     avatar: "https://randomuser.me/api/portraits/men/22.jpg",
-                    bio: "مهندس برمجيات ومدون تقني",
+                    bio: "طالب هندسة ولاعب كرة قدم",
+                    followers: 543,
+                    following: 765,
+                    posts: 23,
                     online: false
                 },
                 {
@@ -716,7 +1279,10 @@
                     name: "نورا أحمد",
                     username: "nora",
                     avatar: "https://randomuser.me/api/portraits/women/33.jpg",
-                    bio: "طبيبة ومتطوعة في الأعمال الخيرية",
+                    bio: "كاتبة ومترجمة، أحب القراءة والسفر",
+                    followers: 987,
+                    following: 123,
+                    posts: 67,
                     online: true
                 },
                 {
@@ -725,262 +1291,182 @@
                     username: "khaled",
                     avatar: "https://randomuser.me/api/portraits/men/55.jpg",
                     bio: "رجل أعمال ومستثمر",
-                    online: true
+                    followers: 2345,
+                    following: 89,
+                    posts: 12,
+                    online: false
                 }
             ],
-            
             posts: [
                 {
                     id: 1,
-                    userId: 2,
-                    text: "تصميم جديد أعمل عليه حالياً لعميل في دبي. ما رأيكم؟",
-                    image: "https://source.unsplash.com/random/600x400?design",
-                    likes: 124,
-                    comments: 23,
-                    shares: 7,
-                    time: "منذ ساعة",
-                    reactions: {
-                        like: 89,
-                        love: 25,
-                        wow: 7,
-                        haha: 3
-                    }
+                    userId: 1,
+                    text: "هذا أول منشور تجريبي في تطبيق Zowar! 🎉",
+                    image: "https://source.unsplash.com/random/600x400?nature",
+                    likes: 42,
+                    comments: 8,
+                    time: "منذ ساعة"
                 },
                 {
                     id: 2,
-                    userId: 3,
-                    text: "شارك في ورشة عمل اليوم عن الذكاء الاصطناعي وتعلمت الكثير من التقنيات الجديدة! #AI #Tech",
-                    image: "https://source.unsplash.com/random/600x400?tech",
-                    likes: 89,
+                    userId: 2,
+                    text: "تصميم جديد أعمل عليه حالياً، ما رأيكم؟",
+                    image: "https://source.unsplash.com/random/600x400?design",
+                    likes: 87,
                     comments: 15,
-                    shares: 4,
-                    time: "منذ 3 ساعات",
-                    reactions: {
-                        like: 56,
-                        love: 18,
-                        wow: 12,
-                        haha: 3
-                    }
+                    time: "منذ 3 ساعات"
                 },
                 {
                     id: 3,
-                    userId: 4,
-                    text: "يوم جميل في الحديقة مع الأصدقاء! 🌳",
-                    image: "https://source.unsplash.com/random/600x400?park",
-                    likes: 215,
-                    comments: 32,
-                    shares: 12,
-                    time: "منذ 5 ساعات",
-                    reactions: {
-                        like: 132,
-                        love: 68,
-                        wow: 15
-                    }
+                    userId: 3,
+                    text: "فوز كبير لفريقنا اليوم في المباراة! ⚽",
+                    image: "https://source.unsplash.com/random/600x400?soccer",
+                    likes: 124,
+                    comments: 23,
+                    time: "منذ 5 ساعات"
                 }
             ],
-            
             conversations: [
                 {
                     id: 1,
                     userId: 2,
-                    lastMessage: "هل انتهيت من التصميم الذي تحدثنا عنه؟",
+                    lastMessage: "مرحباً أحمد، كيف حالك؟",
                     time: "10:30 ص",
-                    unread: 2,
-                    messages: [
-                        {
-                            id: 1,
-                            sender: 2,
-                            text: "مرحبًا أحمد! كيف حالك؟",
-                            time: "10:00 ص"
-                        },
-                        {
-                            id: 2,
-                            sender: 1,
-                            text: "أهلا سارة! أنا بخير، شكرًا لك. كيف حالك؟",
-                            time: "10:15 ص"
-                        },
-                        {
-                            id: 3,
-                            sender: 2,
-                            text: "أنا أيضًا بخير الحمدلله. هل انتهيت من التصميم الذي تحدثنا عنه؟",
-                            time: "10:30 ص"
-                        }
-                    ]
+                    unread: 2
                 },
                 {
                     id: 2,
-                    userId: 3,
-                    lastMessage: "شكرًا لك على المساعدة في حل المشكلة",
+                    userId: 4,
+                    lastMessage: "شكراً على المساعدة!",
                     time: "أمس",
-                    unread: 0,
-                    messages: [
-                        {
-                            id: 1,
-                            sender: 3,
-                            text: "مرحبًا أحمد، هل يمكنك مساعدتي في مشكلة في الكود؟",
-                            time: "9:00 م"
-                        },
-                        {
-                            id: 2,
-                            sender: 1,
-                            text: "بالطبع محمد، ما هي المشكلة؟",
-                            time: "9:15 م"
-                        },
-                        {
-                            id: 3,
-                            sender: 3,
-                            text: "شكرًا لك على المساعدة في حل المشكلة",
-                            time: "10:30 م"
-                        }
-                    ]
-                }
-            ],
-            
-            notifications: [
-                {
-                    id: 1,
-                    type: "like",
-                    userId: 2,
-                    postId: 1,
-                    text: "أعجبت سارة بمنشورك",
-                    time: "منذ 5 دقائق",
-                    read: false
-                },
-                {
-                    id: 2,
-                    type: "comment",
-                    userId: 3,
-                    postId: 1,
-                    text: "علق محمد على منشورك: \"تصميم رائع!\"",
-                    time: "منذ ساعة",
-                    read: false
+                    unread: 0
                 },
                 {
                     id: 3,
-                    type: "follow",
-                    userId: 4,
-                    text: "بدأت نورا متابعتك",
-                    time: "منذ 3 ساعات",
-                    read: true
+                    userId: 3,
+                    lastMessage: "هل سنلتقي غداً كما اتفقنا؟",
+                    time: "الثلاثاء",
+                    unread: 1
                 }
-            ]
+            ],
+            messages: {
+                1: [
+                    { sender: 2, text: "مرحباً أحمد، كيف حالك؟", time: "10:30 ص" },
+                    { sender: 1, text: "أهلاً سارة، أنا بخير الحمد لله. وأنتِ؟", time: "10:32 ص" },
+                    { sender: 2, text: "بخير أيضاً، شكراً! هل انتهيت من المشروع؟", time: "10:33 ص" }
+                ],
+                2: [
+                    { sender: 4, text: "شكراً جزيلاً على المساعدة في الترجمة", time: "9:15 ص" },
+                    { sender: 1, text: "العفو، لا شكر على واجب", time: "9:20 ص" }
+                ],
+                3: [
+                    { sender: 3, text: "هل سنلتقي غداً كما اتفقنا؟", time: "8:00 م" },
+                    { sender: 1, text: "نعم بالتأكيد، في المقهى نفسه", time: "8:05 م" }
+                ]
+            }
         };
 
-        // عناصر DOM
-        const sections = document.querySelectorAll('.section');
-        const navItems = document.querySelectorAll('.nav-item');
-        const createPostModal = document.getElementById('create-post-modal');
-        const chatModal = document.getElementById('chat-modal');
-        const sideMenu = document.getElementById('side-menu');
-        
-        // تهيئة التطبيق
-        document.addEventListener('DOMContentLoaded', () => {
-            // إخفاء شاشة التحميل بعد 2 ثانية
+        // تهيئة الأصوات
+        let sounds = {
+            click: null,
+            notification: null,
+            message: null,
+            post: null,
+            call: null
+        };
+
+        // تهيئة التطبيق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // إخفاء شاشة التحميل بعد 3 ثواني
             setTimeout(() => {
-                document.getElementById('splash-screen').style.opacity = '0';
+                document.getElementById('splash-screen').classList.add('hidden');
                 setTimeout(() => {
                     document.getElementById('splash-screen').style.display = 'none';
                 }, 500);
-            }, 2000);
-            
+            }, 3000);
+
+            // تهيئة الأصوات
+            initSounds();
+
             // تحميل البيانات
-            loadPosts();
-            loadSuggestedPeople();
-            loadConversations();
-            loadNotifications();
+            loadData();
+
+            // إعداد المستخدم الحالي
+            const currentUser = mockData.users[0];
             
-            // إعداد القائمة الجانبية
-            document.getElementById('menu-btn').addEventListener('click', () => {
-                sideMenu.classList.remove('hidden');
-            });
-            
-            document.getElementById('close-menu').addEventListener('click', () => {
-                sideMenu.classList.add('hidden');
-            });
-            
-            // التنقل بين الأقسام
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const sectionId = item.getAttribute('data-section');
-                    showSection(sectionId);
-                    
-                    // تحديث العنصر النشط في القائمة السفلية
-                    navItems.forEach(navItem => {
-                        navItem.classList.remove('active');
-                    });
-                    item.classList.add('active');
-                });
-            });
-            
-            // إنشاء منشور
-            document.getElementById('open-create-post').addEventListener('click', () => {
-                createPostModal.classList.remove('hidden');
-            });
-            
-            document.getElementById('close-post-modal').addEventListener('click', () => {
-                createPostModal.classList.add('hidden');
-            });
-            
-            document.getElementById('post-image-input').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        document.getElementById('post-preview').classList.remove('hidden');
-                        document.getElementById('post-image-preview').src = event.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            document.getElementById('submit-post-btn').addEventListener('click', () => {
-                const postText = document.getElementById('post-text').value;
-                if (postText.trim() !== '') {
-                    createPost(postText);
-                    createPostModal.classList.add('hidden');
-                }
-            });
-            
-            // الدردشة
-            document.getElementById('back-to-messages').addEventListener('click', () => {
-                chatModal.classList.add('hidden');
-            });
-            
-            document.getElementById('send-message-btn').addEventListener('click', sendMessage);
-            
-            document.getElementById('message-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-            
-            // تسجيل الخروج
-            document.getElementById('logout-btn').addEventListener('click', () => {
-                alert("تم تسجيل الخروج بنجاح");
-                showSection('home-section');
-            });
-            
-            // تبديل الوضع الليلي
-            const darkModeToggle = document.createElement('button');
-            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            darkModeToggle.className = 'p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700';
-            darkModeToggle.addEventListener('click', toggleDarkMode);
-            document.querySelector('nav').appendChild(darkModeToggle);
+            // إعداد عناصر الواجهة
+            setupUI(currentUser);
+
+            // إعداد معالجي الأحداث
+            setupEventHandlers(currentUser);
         });
-        
-        // وظائف التطبيق
-        function showSection(sectionId) {
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
+
+        // وظيفة تهيئة الأصوات
+        function initSounds() {
+            try {
+                // تهيئة Tone.js
+                Tone.start();
+                
+                // أصوات النقر
+                sounds.click = new Tone.Player({
+                    url: "https://assets.codepen.io/3364143/click.mp3",
+                    volume: -10
+                }).toDestination();
+                
+                // أصوات الإشعارات
+                sounds.notification = new Tone.Player({
+                    url: "https://assets.codepen.io/3364143/notification.mp3",
+                    volume: -8
+                }).toDestination();
+                
+                // أصوات الرسائل
+                sounds.message = new Tone.Player({
+                    url: "https://assets.codepen.io/3364143/message.mp3",
+                    volume: -12
+                }).toDestination();
+                
+                // أصوات المنشورات
+                sounds.post = new Tone.Player({
+                    url: "https://assets.codepen.io/3364143/post.mp3",
+                    volume: -15
+                }).toDestination();
+                
+                // أصوات المكالمات
+                sounds.call = new Tone.Player({
+                    url: "https://assets.codepen.io/3364143/call.mp3",
+                    volume: -5
+                }).toDestination();
+                
+            } catch (error) {
+                console.error("Error initializing sounds:", error);
+            }
         }
-        
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+
+        // وظيفة تشغيل الصوت
+        function playSound(sound) {
+            try {
+                if (sounds[sound]) {
+                    sounds[sound].start();
+                }
+            } catch (error) {
+                console.error("Error playing sound:", error);
+            }
         }
-        
-        function loadPosts() {
+
+        // وظيفة تحميل البيانات
+        function loadData() {
+            // تحميل المنشورات
+            renderPosts();
+            
+            // تحميل الأشخاص المقترحين
+            renderSuggestedPeople();
+            
+            // تحميل المحادثات
+            renderConversations();
+        }
+
+        // وظيفة عرض المنشورات
+        function renderPosts() {
             const postsContainer = document.getElementById('posts-container');
             postsContainer.innerHTML = '';
             
@@ -988,265 +1474,385 @@
                 const user = mockData.users.find(u => u.id === post.userId);
                 
                 const postElement = document.createElement('div');
-                postElement.className = 'post-card bg-white dark:bg-gray-800';
+                postElement.className = 'card';
                 postElement.innerHTML = `
-                    <div class="p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center space-x-3">
-                                <img src="${user.avatar}" class="w-10 h-10 rounded-full">
-                                <div>
-                                    <h3 class="font-bold">${user.name}</h3>
-                                    <p class="text-xs text-gray-500">${post.time}</p>
-                                </div>
-                            </div>
-                            <button class="text-gray-500">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
+                    <div class="p-4 flex items-center">
+                        <img src="${user.avatar}" class="w-10 h-10 rounded-full">
+                        <div class="ml-3">
+                            <h3 class="font-bold">${user.name}</h3>
+                            <p class="text-xs text-gray-500">${post.time}</p>
                         </div>
-                        
+                    </div>
+                    <div class="px-4 pb-3">
                         <p class="mb-3">${post.text}</p>
-                        
-                        ${post.image ? `
-                        <div class="relative mb-3">
-                            <img src="${post.image}" class="w-full rounded-lg">
-                            <div class="absolute bottom-3 right-3 flex space-x-2">
-                                <button class="reaction-btn bg-white/80 dark:bg-gray-800/80 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-heart text-[var(--danger)]"></i>
-                                </button>
-                                <button class="reaction-btn bg-white/80 dark:bg-gray-800/80 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-comment text-[var(--primary)]"></i>
-                                </button>
-                            </div>
+                        <div class="img-hover-zoom rounded-lg overflow-hidden mb-3">
+                            <img src="${post.image}" class="w-full">
                         </div>
-                        ` : ''}
-                        
-                        <div class="flex items-center justify-between text-gray-500 text-sm">
-                            <div class="flex items-center space-x-2">
-                                <div class="flex items-center">
-                                    <i class="fas fa-heart text-[var(--danger)] mr-1"></i>
-                                    <span>${post.likes}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-comment text-[var(--primary)] mr-1"></i>
-                                    <span>${post.comments}</span>
-                                </div>
-                            </div>
-                            <div>
-                                <span>${post.shares} مشاركات</span>
-                            </div>
+                        <div class="flex justify-between text-gray-500 text-sm">
+                            <span>${post.likes} إعجاب</span>
+                            <span>${post.comments} تعليق</span>
                         </div>
-                        
-                        <div class="flex justify-between border-t dark:border-gray-700 pt-3 mt-3">
-                            <button class="post-action-btn flex-1 flex items-center justify-center">
-                                <i class="fas fa-thumbs-up mr-1"></i> أعجبني
-                            </button>
-                            <button class="post-action-btn flex-1 flex items-center justify-center">
-                                <i class="fas fa-comment mr-1"></i> تعليق
-                            </button>
-                            <button class="post-action-btn flex-1 flex items-center justify-center">
-                                <i class="fas fa-share mr-1"></i> مشاركة
-                            </button>
-                        </div>
+                    </div>
+                    <div class="flex border-t dark:border-gray-700">
+                        <button class="flex-1 py-2 text-center text-gray-500 hover:text-[var(--primary)] click-effect">
+                            <i class="far fa-thumbs-up mr-1"></i> أعجبني
+                        </button>
+                        <button class="flex-1 py-2 text-center text-gray-500 hover:text-[var(--primary)] click-effect">
+                            <i class="far fa-comment mr-1"></i> تعليق
+                        </button>
+                        <button class="flex-1 py-2 text-center text-gray-500 hover:text-[var(--primary)] click-effect">
+                            <i class="far fa-share-square mr-1"></i> مشاركة
+                        </button>
                     </div>
                 `;
                 
                 postsContainer.appendChild(postElement);
             });
         }
-        
-        function loadSuggestedPeople() {
-            const container = document.getElementById('suggested-people');
-            container.innerHTML = '';
+
+        // وظيفة عرض الأشخاص المقترحين
+        function renderSuggestedPeople() {
+            const suggestedPeople = document.getElementById('suggested-people');
+            suggestedPeople.innerHTML = '';
             
-            mockData.users.forEach(user => {
-                if (user.id !== mockData.currentUser.id) {
-                    const userElement = document.createElement('div');
-                    userElement.className = 'flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl shadow';
-                    userElement.innerHTML = `
-                        <div class="flex items-center space-x-3">
-                            <img src="${user.avatar}" class="w-12 h-12 rounded-full">
-                            <div>
-                                <h3 class="font-bold">${user.name}</h3>
-                                <p class="text-xs text-gray-500">@${user.username}</p>
-                                <p class="text-xs mt-1">${user.bio}</p>
-                            </div>
-                        </div>
-                        <button class="follow-btn px-3 py-1 bg-[var(--primary)] text-white rounded-full text-sm hover:bg-[var(--secondary)] transition">
-                            متابعة
-                        </button>
-                    `;
-                    
-                    container.appendChild(userElement);
-                }
+            mockData.users.slice(1, 4).forEach(user => {
+                const personElement = document.createElement('div');
+                personElement.className = 'card p-3 flex items-center';
+                personElement.innerHTML = `
+                    <img src="${user.avatar}" class="w-12 h-12 rounded-full">
+                    <div class="ml-3 flex-grow">
+                        <h3 class="font-bold">${user.name}</h3>
+                        <p class="text-xs text-gray-500">@${user.username}</p>
+                    </div>
+                    <button class="bg-[var(--primary)] text-white px-3 py-1 rounded-full text-xs click-effect">
+                        متابعة
+                    </button>
+                `;
+                
+                suggestedPeople.appendChild(personElement);
             });
         }
-        
-        function loadConversations() {
-            const container = document.getElementById('conversations-list');
-            container.innerHTML = '';
+
+        // وظيفة عرض المحادثات
+        function renderConversations() {
+            const conversationsList = document.getElementById('conversations-list');
+            conversationsList.innerHTML = '';
             
             mockData.conversations.forEach(conversation => {
                 const user = mockData.users.find(u => u.id === conversation.userId);
                 
                 const conversationElement = document.createElement('div');
-                conversationElement.className = 'conversation-item flex items-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow cursor-pointer hover:shadow-md transition';
-                conversationElement.setAttribute('data-conversation-id', conversation.id);
+                conversationElement.className = 'card p-3 flex items-center click-effect';
+                conversationElement.dataset.conversationId = conversation.id;
                 conversationElement.innerHTML = `
-                    <div class="relative">
-                        <img src="${user.avatar}" class="w-12 h-12 rounded-full">
-                        ${user.online ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></span>' : ''}
-                    </div>
-                    <div class="flex-1 mr-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold">${user.name}</h3>
-                            <span class="text-xs text-gray-500">${conversation.time}</span>
-                        </div>
+                    <img src="${user.avatar}" class="w-12 h-12 rounded-full">
+                    <div class="ml-3 flex-grow">
+                        <h3 class="font-bold">${user.name}</h3>
                         <p class="text-sm text-gray-500 truncate">${conversation.lastMessage}</p>
                     </div>
-                    ${conversation.unread > 0 ? `
-                    <div class="w-5 h-5 bg-[var(--danger)] text-white text-xs rounded-full flex items-center justify-center">
-                        ${conversation.unread}
-                    </div>
-                    ` : ''}
-                `;
-                
-                conversationElement.addEventListener('click', () => {
-                    openChat(conversation.id);
-                });
-                
-                container.appendChild(conversationElement);
-            });
-        }
-        
-        function loadNotifications() {
-            const container = document.getElementById('notifications-list');
-            container.innerHTML = '';
-            
-            mockData.notifications.forEach(notification => {
-                const user = mockData.users.find(u => u.id === notification.userId);
-                
-                const notificationElement = document.createElement('div');
-                notificationElement.className = `notification-item flex items-start p-3 bg-white dark:bg-gray-800 rounded-xl shadow ${!notification.read ? 'border-r-4 border-[var(--primary)]' : ''}`;
-                notificationElement.innerHTML = `
-                    <img src="${user.avatar}" class="w-10 h-10 rounded-full mr-3">
-                    <div class="flex-1">
-                        <div class="flex justify-between">
-                            <h3 class="font-bold">${user.name}</h3>
-                            <span class="text-xs text-gray-500">${notification.time}</span>
-                        </div>
-                        <p>${notification.text}</p>
-                        ${notification.postId ? `
-                        <div class="mt-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">
-                            عرض المنشور
-                        </div>
-                        ` : ''}
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">${conversation.time}</p>
+                        ${conversation.unread > 0 ? `<span class="badge">${conversation.unread}</span>` : ''}
                     </div>
                 `;
                 
-                container.appendChild(notificationElement);
+                conversationsList.appendChild(conversationElement);
             });
         }
-        
-        function createPost(text) {
-            const newPost = {
-                id: mockData.posts.length + 1,
-                userId: mockData.currentUser.id,
-                text: text,
-                image: document.getElementById('post-image-preview').src || null,
-                likes: 0,
-                comments: 0,
-                shares: 0,
-                time: "الآن",
-                reactions: {
-                    like: 0,
-                    love: 0,
-                    wow: 0
-                }
-            };
+
+        // وظيفة عرض الرسائل
+        function renderMessages(conversationId) {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = '';
             
-            mockData.posts.unshift(newPost);
-            loadPosts();
+            const conversation = mockData.messages[conversationId];
+            const user = mockData.users.find(u => u.id === conversationId);
             
-            // إعادة تعيين النموذج
-            document.getElementById('post-text').value = '';
-            document.getElementById('post-preview').classList.add('hidden');
-            document.getElementById('post-image-preview').src = '';
-            document.getElementById('post-image-input').value = '';
-        }
-        
-        function openChat(conversationId) {
-            const conversation = mockData.conversations.find(c => c.id === conversationId);
-            if (!conversation) return;
+            document.getElementById('message-user-image').src = user.avatar;
+            document.getElementById('message-user-name').textContent = user.name;
             
-            const user = mockData.users.find(u => u.id === conversation.userId);
-            
-            document.getElementById('chat-user-avatar').src = user.avatar;
-            document.getElementById('chat-user-name').textContent = user.name;
-            document.getElementById('chat-user-status').textContent = user.online ? "نشطة الآن" : "غير متصل";
-            document.getElementById('chat-user-status').className = user.online ? "text-xs text-green-500" : "text-xs text-gray-500";
-            
-            // تحميل الرسائل
-            const chatMessages = document.getElementById('chat-messages');
-            chatMessages.innerHTML = '';
-            
-            conversation.messages.forEach(message => {
-                const isMe = message.sender === mockData.currentUser.id;
-                addMessage(message.text, isMe);
-            });
-            
-            chatModal.classList.remove('hidden');
-        }
-        
-        function addMessage(text, isMe) {
-            const chatMessages = document.getElementById('chat-messages');
-            
-            const messageElement = document.createElement('div');
-            messageElement.className = `chat-bubble ${isMe ? 'sent' : 'received'}`;
-            
-            if (text.startsWith("VOICE:")) {
-                // رسالة صوتية
-                const duration = text.split(":")[1];
+            conversation.forEach(message => {
+                const isCurrentUser = message.sender === 1;
+                const sender = mockData.users.find(u => u.id === message.sender);
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = `message-bubble ${isCurrentUser ? 'sent' : 'received'}`;
                 messageElement.innerHTML = `
-                    <div class="voice-message">
-                        <div class="waveform">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <span class="ml-2 text-xs">${duration}</span>
-                    </div>
+                    ${!isCurrentUser ? `<img src="${sender.avatar}" class="w-6 h-6 rounded-full absolute -left-8 top-2">` : ''}
+                    <p>${message.text}</p>
+                    <span class="text-xs opacity-70 block text-right mt-1">${message.time}</span>
                 `;
-            } else {
-                // رسالة نصية
-                messageElement.textContent = text;
-            }
+                
+                messagesContainer.appendChild(messageElement);
+            });
             
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // وظيفة إعداد واجهة المستخدم
+        function setupUI(currentUser) {
+            // تحديث صورة المستخدم في القائمة الجانبية
+            document.querySelector('#side-menu img').src = currentUser.avatar;
+            document.querySelector('#side-menu h3').textContent = currentUser.name;
+            document.querySelector('#side-menu p').textContent = `@${currentUser.username}`;
+            
+            // تحديث صورة المستخدم في الملف الشخصي
+            document.querySelector('#profile-section img').src = currentUser.avatar;
+            document.querySelector('#profile-section h2').textContent = currentUser.name;
+            document.querySelector('#profile-section p:nth-of-type(1)').textContent = `@${currentUser.username}`;
+            document.querySelector('#profile-section p:nth-of-type(2)').textContent = currentUser.bio;
+            
+            // تحديث إحصائيات الملف الشخصي
+            document.querySelector('#profile-section .grid div:nth-child(1) div:nth-child(1)').textContent = currentUser.followers;
+            document.querySelector('#profile-section .grid div:nth-child(2) div:nth-child(1)').textContent = currentUser.following;
+            document.querySelector('#profile-section .grid div:nth-child(3) div:nth-child(1)').textContent = currentUser.posts;
+        }
+
+        // وظيفة إعداد معالجي الأحداث
+        function setupEventHandlers(currentUser) {
+            // النقر على أيقونة القائمة
+            document.getElementById('menu-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('side-menu').classList.remove('hidden');
+                setTimeout(() => {
+                    document.querySelector('#side-menu > div').classList.remove('translate-x-full');
+                }, 10);
+            });
+            
+            // النقر على أيقونة إغلاق القائمة
+            document.getElementById('close-menu').addEventListener('click', function() {
+                playSound('click');
+                document.querySelector('#side-menu > div').classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.getElementById('side-menu').classList.add('hidden');
+                }, 300);
+            });
+            
+            // النقر على أيقونة الإشعارات
+            document.getElementById('notifications-btn').addEventListener('click', function() {
+                playSound('notification');
+                showNotification('لديك 3 إشعارات جديدة');
+            });
+            
+            // النقر على أيقونة البحث
+            document.getElementById('search-btn').addEventListener('click', function() {
+                playSound('click');
+                showNotification('سيتم تفعيل البحث قريباً');
+            });
+            
+            // النقر على أيقونة تسجيل الخروج
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                playSound('click');
+                showNotification('سيتم تسجيل الخروج قريباً');
+            });
+            
+            // النقر على عناصر القائمة الجانبية
+            document.querySelectorAll('#side-menu nav a').forEach(item => {
+                item.addEventListener('click', function() {
+                    playSound('click');
+                    showNotification('سيتم فتح هذه الصفحة قريباً');
+                });
+            });
+            
+            // النقر على عناصر القصص
+            document.querySelectorAll('.story-circle').forEach(story => {
+                story.addEventListener('click', function() {
+                    playSound('click');
+                    showNotification('سيتم عرض القصة قريباً');
+                });
+            });
+            
+            // النقر على زر إنشاء منشور
+            document.getElementById('open-create-post').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('create-post-modal').classList.add('active');
+            });
+            
+            // النقر على زر إغلاق إنشاء منشور
+            document.getElementById('close-create-post').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('create-post-modal').classList.remove('active');
+            });
+            
+            // النقر على زر إضافة صورة
+            document.getElementById('add-image-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('post-preview').classList.remove('hidden');
+                document.getElementById('post-image-preview').src = 'https://source.unsplash.com/random/600x400?post';
+            });
+            
+            // النقر على زر نشر منشور
+            document.getElementById('submit-post-btn').addEventListener('click', function() {
+                playSound('post');
+                const postText = document.getElementById('post-text').value;
+                if (postText.trim() !== '') {
+                    showNotification('تم نشر منشورك بنجاح');
+                    document.getElementById('create-post-modal').classList.remove('active');
+                    document.getElementById('post-text').value = '';
+                    document.getElementById('post-preview').classList.add('hidden');
+                } else {
+                    showNotification('الرجاء إدخال نص للمنشور');
+                }
+            });
+            
+            // النقر على عناصر المحادثات
+            document.querySelectorAll('#conversations-list .card').forEach(conversation => {
+                conversation.addEventListener('click', function() {
+                    playSound('click');
+                    const conversationId = this.dataset.conversationId;
+                    renderMessages(conversationId);
+                    document.getElementById('message-modal').classList.add('active');
+                });
+            });
+            
+            // النقر على زر العودة إلى المحادثات
+            document.getElementById('back-to-conversations').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('message-modal').classList.remove('active');
+            });
+            
+            // النقر على زر إرسال رسالة
+            document.getElementById('message-send-btn').addEventListener('click', function() {
+                const messageInput = document.getElementById('message-input');
+                if (messageInput.value.trim() !== '')                    playSound('message');
+                    const messagesContainer = document.getElementById('messages-container');
+                    
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message-bubble sent';
+                    newMessage.innerHTML = `
+                        <p>${messageInput.value}</p>
+                        <span class="text-xs opacity-70 block text-right mt-1">الآن</span>
+                    `;
+                    
+                    messagesContainer.appendChild(newMessage);
+                    messageInput.value = '';
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            });
+            
+            // إرسال الرسالة عند الضغط على Enter
+            document.getElementById('message-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('message-send-btn').click();
+                }
+            });
+            
+            // النقر على زر المكالمة
+            document.getElementById('message-call-btn').addEventListener('click', function() {
+                playSound('call');
+                const userName = document.getElementById('message-user-name').textContent;
+                const userImage = document.getElementById('message-user-image').src;
+                
+                document.getElementById('call-user-name').textContent = userName;
+                document.getElementById('call-user-image').src = userImage;
+                document.getElementById('call-modal').classList.add('active');
+                
+                // إغلاق نافذة الرسائل عند البدء بالمكالمة
+                document.getElementById('message-modal').classList.remove('active');
+            });
+            
+            // النقر على زر إنهاء المكالمة
+            document.getElementById('end-call-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('call-modal').classList.remove('active');
+                showNotification('تم إنهاء المكالمة');
+            });
+            
+            // النقر على أزرار التنقل السفلية
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    playSound('click');
+                    const sectionId = this.dataset.section;
+                    
+                    // إزالة النشاط من جميع الأزرار والأقسام
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // إضافة النشاط للزر والقسم المحدد
+                    this.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+            
+            // النقر على أزرار الألعاب
+            document.querySelectorAll('.game-card').forEach(game => {
+                game.addEventListener('click', function() {
+                    playSound('click');
+                    const gameName = this.dataset.game;
+                    const gameTitle = this.querySelector('h3').textContent;
+                    
+                    document.getElementById('game-room-title').textContent = gameTitle;
+                    document.getElementById('game-room-content').innerHTML = `
+                        <p class="text-center mb-4">جاري تحضير ${gameTitle}...</p>
+                        <div class="loader mx-auto"></div>
+                    `;
+                    
+                    document.getElementById('game-room').style.display = 'block';
+                });
+            });
+            
+            // النقر على زر الخروج من اللعبة
+            document.getElementById('exit-game-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('game-room').style.display = 'none';
+            });
+            
+            // النقر على زر بدء اللعبة
+            document.getElementById('start-game-btn').addEventListener('click', function() {
+                playSound('click');
+                showNotification('جاري بدء اللعبة...');
+            });
+            
+            // النقر على أزرار التدريس (طالب/معلّم)
+            document.getElementById('student-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('student-view').style.display = 'block';
+                document.getElementById('teacher-view').style.display = 'none';
+                this.classList.add('bg-[var(--primary)]', 'text-white');
+                document.getElementById('teacher-btn').classList.remove('bg-[var(--primary)]', 'text-white');
+            });
+            
+            document.getElementById('teacher-btn').addEventListener('click', function() {
+                playSound('click');
+                document.getElementById('student-view').style.display = 'none';
+                document.getElementById('teacher-view').style.display = 'block';
+                this.classList.add('bg-[var(--primary)]', 'text-white');
+                document.getElementById('student-btn').classList.remove('bg-[var(--primary)]', 'text-white');
+            });
+            
+            // النقر على بطاقات المواد الدراسية
+            document.querySelectorAll('.tutoring-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    playSound('click');
+                    const subject = this.dataset.subject;
+                    const subjectTitle = this.querySelector('h3').textContent;
+                    
+                    document.getElementById('subject-title').textContent = subjectTitle;
+                    document.getElementById('subject-description').textContent = `هذه صفحة مادة ${subjectTitle}. يمكنك الانضمام إلى الحصص الحية أو الاطلاع على المواد التعليمية المتاحة.`;
+                    document.getElementById('subject-details').style.display = 'block';
+                });
+            });
         }
         
-        function sendMessage() {
-            const messageInput = document.getElementById('message-input');
-            const text = messageInput.value.trim();
+        // وظيفة عرض الإشعارات
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
             
-            if (text !== '') {
-                addMessage(text, true);
-                messageInput.value = '';
-                
-                // إجابة وهمية بعد ثانية
+            notificationText.textContent = message;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
                 setTimeout(() => {
-                    const responses = [
-                        "شكرًا على رسالتك!",
-                        "أنا مشغول الآن، سأرد عليك لاحقًا",
-                        "هل يمكننا التحدث لاحقًا؟",
-                        "أهلاً! كيف يمكنني مساعدتك؟"
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(randomResponse, false);
-                }, 1000);
-            }
+                    notification.classList.add('hidden');
+                }, 500);
+            }, 3000);
         }
     </script>
 </body>
