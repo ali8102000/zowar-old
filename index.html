@@ -2,1809 +2,1252 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Zowar (زُوّار) - Firebase و قسم التدريس</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zowar - شبكتك الاجتماعية العالمية</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        // These are the V9 modular SDKs
-        // const firebase = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-        // const auth = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
-        // const firestore = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        // const analytics = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js");
-        // For this prototype, we'll mock Firebase interactions to keep it client-side in a single file.
-        // In a real app, you would uncomment the above and use the actual Firebase services.
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <!-- Visualization & Content Choices: 
-        - Firebase: Config included. Mock functions for auth (signInAnonymously) and Firestore (getDoc, setDoc, etc.) to interact with local mockData.
-        - Tutoring Section: Cards for school subjects (Math, Science, etc.). Clicking a subject shows a placeholder.
-        - Section Theming: Distinct background/accent for each section. Home icon changed to 🏠.
-        - All existing features (Posts, Stories, Search, Chat, AI features) refined for consistency.
-    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary-global: #FDFEFF; 
-            --text-primary-global: #1A202C; 
-            --accent-primary-global: #071A50; 
-            --accent-secondary-global: #1DBFAF; 
-            --highlight-gold-global: #F0B90B; 
-            --border-color-global: #EAEEF3; 
-            --danger-color-global: #E53E3E;
-
-            --dark-bg-primary-global: #0D1117; 
-            --dark-text-primary-global: #E6EDF3;
-            --dark-accent-primary-global: #79C0FF; 
-            --dark-accent-secondary-global: #58A6FF; 
-            --dark-highlight-gold-global: #F2CC8F; 
-            --dark-border-color-global: #30363D;
-            --dark-danger-color-global: #F85149;
-
-            /* Section Specific Themes (Light Mode) */
-            --home-bg: linear-gradient(135deg, #E0F7FA 0%, #E8F5E9 100%); /* Light Blue to Light Green */
-            --home-accent: #26A69A; /* Teal variant */
-            --explore-bg: linear-gradient(135deg, #FFFDE7 0%, #FFF3E0 100%); /* Light Yellow to Light Orange */
-            --explore-accent: #FFA000; /* Amber */
-            --tutoring-bg: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%); /* Light Purple */
-            --tutoring-accent: #8E24AA; /* Purple */
-            --profile-bg: linear-gradient(135deg, #E3F2FD 0%, #E8EAF6 100%); /* Light Blue to Indigo */
-            --profile-accent: var(--accent-primary-global);
-            --messages-bg: linear-gradient(135deg, #E0F2F1 0%, #E0F7FA 100%);
-            --messages-accent: #00897B; 
-
-            /* Section Specific Themes (Dark Mode) */
-            --dark-home-bg: linear-gradient(135deg, #1A222C 0%, #1B2F2A 100%);
-            --dark-home-accent: #4DB6AC;
-            --dark-explore-bg: linear-gradient(135deg, #2C2A24 0%, #302D26 100%);
-            --dark-explore-accent: var(--dark-highlight-gold-global);
-            --dark-tutoring-bg: linear-gradient(135deg, #2C1D31 0%, #311B92 100%); /* Deep Purple */
-            --dark-tutoring-accent: #CE93D8; /* Lighter Purple */
-            --dark-profile-bg: linear-gradient(135deg, #1F243A 0%, #1A2035 100%);
-            --dark-profile-accent: var(--dark-accent-primary-global);
-            --dark-messages-bg: linear-gradient(135deg, #1A2B2A 0%, #1A2F32 100%);
-            --dark-messages-accent: #26A69A;
-        }
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background-color: var(--bg-primary-global); 
-            color: var(--text-primary-global); 
-            -webkit-tap-highlight-color: transparent; 
-            transition: background-color 0.5s, color 0.5s; 
-            font-smooth: antialiased; 
-            -webkit-font-smoothing: antialiased; 
-        }
-        .dark-mode body { /* This class is added to body by JS */
-            background-color: var(--dark-bg-primary-global);
-            color: var(--dark-text-primary-global);
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --text: #2b2d42;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
         }
 
-        .app-container { max-width: 420px; margin: 0 auto; background-color: var(--bg-primary-global); min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.08); overflow: hidden; border-radius: 24px; }
-        .dark-mode .app-container { background-color: var(--dark-bg-primary-global); }
-
-        .main-content { flex-grow: 1; overflow-y: auto; padding-bottom: 75px; }
-        
-        .header-main { padding: 12px 16px; background-color: rgba(255,255,255,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 1000; transition: background-color 0.4s; }
-        .dark-mode .header-main { background-color: rgba(30,30,30,0.7); }
-        .header-title { color: var(--accent-primary-global); font-weight: 900; font-size: 2.1rem; letter-spacing: -0.75px; }
-        .dark-mode .header-title { color: var(--dark-accent-primary-global); }
-        .header-icon-btn { font-size: 1.8rem; color: var(--text-secondary-global); transition: color 0.25s, transform 0.2s; cursor: pointer; position: relative; }
-        .header-icon-btn:hover { color: var(--accent-primary-global); transform: scale(1.12); }
-        .dark-mode .header-icon-btn { color: var(--dark-text-secondary-global); }
-        .dark-mode .header-icon-btn:hover { color: var(--dark-accent-primary-global); }
-        .unread-badge { position: absolute; top: -5px; right: -7px; background-color: var(--danger-color-global); color: white; font-size: 0.65rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; line-height: 1; box-shadow: 0 1px 6px rgba(229,62,62,0.6); }
-        .dark-mode .unread-badge { background-color: var(--dark-danger-color-global); }
-        
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto; background-color: rgba(255,255,255,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--border-color-global); display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -6px 30px rgba(0,0,0,0.05); z-index: 1000; transition: background-color 0.4s, border-color 0.4s; }
-        .dark-mode .bottom-nav { background-color: rgba(30,30,30,0.7); border-top-color: var(--dark-border-color-global); }
-        .nav-item { flex: 1; text-align: center; padding: 6px 0; cursor: pointer; color: var(--text-secondary-global); transition: color 0.3s ease-in-out, transform 0.2s ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .nav-item.active .nav-icon { /* Dynamic color set by JS */ transform: scale(1.2) translateY(-3px); }
-        .nav-item.active .nav-text { /* Dynamic color set by JS */ font-weight: 700; }
-        .nav-item:active { transform: scale(0.92); }
-        .nav-icon { font-size: 1.9rem; margin-bottom: 0px; line-height: 1; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; } 
-        .nav-text { font-size: 0.65rem; margin-top: 3px; transition: color 0.3s; }
-        .create-post-btn .nav-icon { 
-            font-size: 2.8rem; 
-            color: white; 
-            background: linear-gradient(135deg, var(--accent-primary-global), var(--accent-secondary-global)); 
-            border-radius: 50%; 
-            width: 56px; height: 56px; 
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            transform: translateY(-10px); 
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            transition: all 0.3s ease;
         }
-        .dark-mode .create-post-btn .nav-icon { background: linear-gradient(135deg, var(--dark-accent-primary-global), var(--dark-accent-secondary-global)); }
-        .create-post-btn.active .nav-icon { transform: translateY(-10px) scale(1.1) rotate(135deg); }
 
-        .section, .view { display: none; animation: sectionLoadAnimation 0.7s cubic-bezier(0.165, 0.84, 0.44, 1.0); }
-        .section.active, .view.active { display: block; }
-        @keyframes sectionLoadAnimation { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        
-        /* Styles from previous version, adapted for new palette and refinements */
-        .splash-screen, .story-circle, .post-card, .reel-card, .modal, .chat-bubble, .btn, .loading-indicator, .gemini-suggestion-item, .input-field, .voice-note-bubble, .zowar-space-card, .comment-item, .alert-banner, .user-search-item, .profile-header-bg, .profile-avatar-container, .comment-input-area { /* Retain and adapt existing styles, applying new CSS variables */ }
-        
-        .game-card {
-            background-color: var(--bg-content);
-            border-radius: 16px;
-            padding: 20px; /* Increased padding */
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .dark-mode {
+            background-color: var(--dark);
+            color: var(--light);
+        }
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            display: none;
+            padding-bottom: 70px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .dark-mode .bottom-nav {
+            background: rgba(33,37,41,0.95);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 12px 0;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .story-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--accent), var(--danger));
             cursor: pointer;
-            border: 1px solid var(--border-color-global);
+            transition: transform 0.3s ease;
         }
-        .dark-mode .game-card { background-color: var(--dark-bg-content); box-shadow: 0 8px 25px rgba(0,0,0,0.12); border-color: var(--dark-border-color-global); }
-        .game-card:hover { transform: translateY(-6px) scale(1.04); box-shadow: 0 12px 35px rgba(0,0,0,0.08); }
-        .game-card-icon { font-size: 3.5rem; margin-bottom: 16px; line-height: 1; color: var(--games-accent); }
-        .dark-mode .game-card-icon { color: var(--dark-games-accent); }
-        .game-card h3 { font-weight: 800; font-size: 1.2rem; color: var(--text-primary-global); margin-bottom: 6px; }
-        .dark-mode .game-card h3 { color: var(--dark-text-primary-global); }
-        .game-card p { font-size: 0.85rem; color: var(--text-secondary-global); }
-        .dark-mode .game-card p { color: var(--dark-text-secondary-global); }
 
-        .game-lobby-player { display: flex; align-items: center; padding: 10px; background-color: rgba(255,255,255,0.15); border-radius: 10px; margin-bottom: 10px; }
-        .dark-mode .game-lobby-player { background-color: rgba(0,0,0,0.25); }
-        .game-lobby-player img { width: 36px; height: 36px; border-radius: 50%; margin-left: 12px; border: 2px solid rgba(255,255,255,0.5); }
-        .game-lobby-player span { font-size: 0.95rem; color: var(--text-primary-global); }
-        .dark-mode .game-lobby-player span { color: var(--dark-text-primary-global); }
-
-
-        .dice-container { display: flex; justify-content: center; align-items: center; perspective: 1000px; margin: 20px 0; min-height: 80px;}
-        .dice { width: 70px; height: 70px; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); } /* Smoother roll */
-        .dice-face { position: absolute; width: 70px; height: 70px; background-color: #fff; border: 2px solid #ddd; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: bold; color: #333; border-radius: 6px; }
-        .dark-mode .dice-face { background-color: #4A5568; border-color: #718096; color: #E2E8F0; }
-        .face-1 { transform: rotateY(0deg) translateZ(35px); }
-        .face-2 { transform: rotateY(90deg) translateZ(35px); }
-        .face-3 { transform: rotateX(90deg) translateZ(35px); }
-        .face-4 { transform: rotateX(-90deg) translateZ(35px); }
-        .face-5 { transform: rotateY(-90deg) translateZ(35px); }
-        .face-6 { transform: rotateY(180deg) translateZ(35px); }
-        
-        .basketball-court { width: 100%; max-width:300px; height: 220px; background: linear-gradient(to bottom, #F0E68C, #DEB887); border: 3px solid #8B4513; margin: 20px auto; position: relative; border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.2);}
-        .hoop { width: 60px; height: 60px; border: 5px solid #CD5C5C; border-radius: 50%; position: absolute; top: 25px; left: 50%; transform: translateX(-50%); background-color: rgba(255,255,255,0.4); box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .net { width: 50px; height: 35px; border-left: 3px dashed #fff; border-right: 3px dashed #fff; border-bottom: 3px dashed #fff; position: absolute; top: 55px; left: 50%; transform: translateX(-50%); opacity: 0.8;}
-        .ball { width: 35px; height: 35px; background: radial-gradient(circle at 10px 10px, #FFBF00, #FF8C00); border-radius: 50%; position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.4); transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);}
-        .ball.shooting { animation: shootAnimationPro 0.8s forwards cubic-bezier(0.3, 0, 0.1, 1); }
-        @keyframes shootAnimationPro {
-            0% { transform: translate(-50%, 0) scale(1); }
-            40% { transform: translate(-50%, -150px) scale(0.85) rotate(90deg); }
-            100% { transform: translate(-50%, -100px) scale(0.75) rotate(180deg); }
+        .story-circle:hover {
+            transform: scale(1.05);
         }
-        .tutoring-card {
-            background-color: var(--bg-content);
+
+        .post-card {
+            background: white;
             border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            border: 1px solid var(--border-color-global);
+        }
+
+        .dark-mode .post-card {
+            background: #2b2d42;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 8px;
+            position: relative;
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-bubble.sent {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble.received {
+            background: #e9ecef;
+            color: var(--text);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        .dark-mode .chat-bubble.received {
+            background: #343a40;
+            color: white;
+        }
+
+        .voice-message {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 18px;
+            background: var(--primary);
+            color: white;
+            width: fit-content;
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            height: 20px;
+        }
+
+        .waveform span {
+            display: inline-block;
+            width: 3px;
+            margin: 0 1px;
+            background: white;
+            animation: wave 1.2s infinite ease-in-out;
+        }
+
+        .waveform span:nth-child(1) { height: 10px; animation-delay: 0s; }
+        .waveform span:nth-child(2) { height: 15px; animation-delay: 0.2s; }
+        .waveform span:nth-child(3) { height: 20px; animation-delay: 0.4s; }
+        .waveform span:nth-child(4) { height: 15px; animation-delay: 0.6s; }
+        .waveform span:nth-child(5) { height: 10px; animation-delay: 0.8s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1.5); }
+        }
+
+        .reaction-emoji {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            background: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 150px; /* Ensure cards have some height */
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .dark-mode .tutoring-card { background-color: var(--dark-bg-content); box-shadow: 0 6px 20px rgba(0,0,0,0.15); border-color: var(--dark-border-color-global); }
-        .tutoring-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .tutoring-card-icon { font-size: 2.8rem; margin-bottom: 12px; line-height: 1; color: var(--tutoring-accent); }
-        .dark-mode .tutoring-card-icon { color: var(--dark-tutoring-accent); }
-        .tutoring-card h3 { font-weight: 700; font-size: 1.1rem; color: var(--text-primary-global); }
-        .dark-mode .tutoring-card h3 { color: var(--dark-text-primary-global); }
 
+        .dark-mode .reaction-emoji {
+            background: #495057;
+        }
+
+        .language-selector {
+            position: relative;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .dark-mode .language-dropdown {
+            background: #343a40;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .language-selector:hover .language-dropdown {
+            display: block;
+        }
+
+        /* Animations */
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
     </style>
 </head>
-<body class="dark-mode"> 
-    <div id="splash-screen" class="splash-screen">
-        <div class="splash-logo">Zowar</div>
-        <div class="splash-subtitle">زُوّار</div>
-        <div class="loading-indicator mt-12"></div>
-    </div>
-
+<body class="dark-mode">
     <div class="app-container">
-        <header class="header-main">
-            <div class="flex justify-between items-center">
-                <h1 class="header-title">Zowar</h1>
-                <div class="flex items-center space-x-5 rtl:space-x-reverse">
-                    <button id="open-search-modal-btn" class="header-icon-btn search-btn">⌕</button> 
-                    <button id="messages-header-btn" class="header-icon-btn messages-btn">
-                        📨
-                        <span id="unread-messages-badge" class="unread-badge" style="display: none;">0</span>
-                    </button> 
+        <!-- شاشة التحميل -->
+        <div id="splash-screen" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white z-50 transition-opacity duration-500">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold mb-2 animate-bounce">Zowar</h1>
+                <p class="text-xl opacity-90">اتصل. شارك. استكشف.</p>
+                <div class="mt-8">
+                    <div class="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin mx-auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الهيدر الرئيسي -->
+        <header class="p-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md sticky top-0 z-10 shadow-sm flex justify-between items-center">
+            <button id="menu-btn" class="text-xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <h1 class="text-xl font-bold text-[var(--primary)] dark:text-[var(--accent)] flex items-center">
+                <i class="fas fa-globe mr-2"></i> Zowar
+            </h1>
+            
+            <div class="flex items-center space-x-3">
+                <button id="notifications-btn" class="relative">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span id="notification-badge" class="absolute -top-1 -right-1 bg-[var(--danger)] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">3</span>
+                </button>
+                <div class="language-selector">
+                    <button id="language-btn" class="flex items-center">
+                        <i class="fas fa-language text-xl"></i>
+                    </button>
+                    <div class="language-dropdown p-2 w-40">
+                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
+                            <span class="ml-2">🇸🇦</span> العربية
+                        </button>
+                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
+                            <span class="ml-2">🇺🇸</span> English
+                        </button>
+                        <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center">
+                            <span class="ml-2">🇫🇷</span> Français
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <main class="main-content">
-            <section id="home-section" class="section active p-0">
+        <!-- القائمة الجانبية -->
+        <div id="side-menu" class="fixed inset-0 bg-black/50 z-40 hidden">
+            <div class="absolute right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl">
+                <div class="p-4 flex justify-between items-center border-b dark:border-gray-700">
+                    <h2 class="text-xl font-bold">القائمة</h2>
+                    <button id="close-menu" class="text-2xl">&times;</button>
+                </div>
                 <div class="p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200">القصص</h2>
-                        <span class="text-xs font-semibold cursor-pointer hover:underline" style="color: var(--home-accent);">شاهد الكل</span>
-                    </div>
-                    <div id="stories-container" class="flex space-x-3 rtl:space-x-reverse overflow-x-auto pb-3 -mx-4 px-4">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 rounded-full object-cover border-2 border-[var(--primary)]">
+                        <div>
+                            <h3 class="font-bold">أحمد محمد</h3>
+                            <p class="text-sm text-gray-500">@ahmed</p>
                         </div>
+                    </div>
+                    
+                    <nav class="space-y-2">
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-user mr-2"></i> الملف الشخصي
+                        </a>
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-cog mr-2"></i> الإعدادات
+                        </a>
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-moon mr-2"></i> الوضع الليلي
+                        </a>
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-globe mr-2"></i> اللغة
+                        </a>
+                        <a href="#" class="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-question-circle mr-2"></i> المساعدة
+                        </a>
+                        <button id="logout-btn" class="w-full text-left p-3 rounded-lg text-[var(--danger)] hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <i class="fas fa-sign-out-alt mr-2"></i> تسجيل الخروج
+                        </button>
+                    </nav>
                 </div>
-                <div id="posts-feed" class="px-2 sm:px-0">
-                </div>
-            </section>
+            </div>
+        </div>
 
-            <section id="explore-section" class="section p-4">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-5">استكشف</h2>
-                <div class="mb-6 p-5 rounded-xl shadow-xl bg-gradient-to-r from-[var(--accent-secondary-global)] to-[var(--accent-primary-global)] text-white cursor-pointer transition-transform hover:scale-[1.02]" id="find-nearby-people-card">
-                    <h3 class="text-lg font-bold mb-1">الأشخاص القريبون 📍</h3>
-                    <p class="text-xs opacity-80">اكتشف وتواصل مع مستخدمي Zowar في محيطك.</p>
-                </div>
-                <div id="nearby-people-results" class="mb-8" style="display:none;">
-                    <div class="loading-indicator border-top-[var(--accent-primary-global)]"></div>
-                    <p class="text-center text-sm text-gray-500 dark:text-gray-400">جاري البحث عن أشخاص قريبين...</p>
-                    <div id="nearby-users-list" class="mt-4 space-y-3"></div>
+        <!-- الأقسام الرئيسية -->
+        <main class="relative">
+            <!-- قسم الرئيسية -->
+            <section id="home-section" class="section active">
+                <!-- القصص -->
+                <div class="stories-container p-4 overflow-x-auto">
+                    <div class="flex space-x-4">
+                        <!-- قصة المستخدم -->
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="story-circle flex items-center justify-center bg-gradient-to-tr from-[var(--accent)] to-[var(--danger)]">
+                                <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
+                                    <i class="fas fa-plus text-[var(--primary)]"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs">قصتك</span>
+                        </div>
+                        
+                        <!-- قصص الأصدقاء -->
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="story-circle">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">سارة</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="story-circle">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">محمد</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="story-circle">
+                                <img src="https://randomuser.me/api/portraits/women/33.jpg" class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">نورا</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="story-circle">
+                                <img src="https://randomuser.me/api/portraits/men/55.jpg" class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">خالد</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"> Zowar Spaces <span class="text-xs px-2 py-0.5 bg-[var(--highlight-gold-global)] text-black rounded-full align-middle shadow-sm">مباشر</span></h3>
-                    <div id="zowar-spaces-container" class="space-y-4"></div>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">الغرف الجغرافية</h3>
-                    <div id="geo-rooms-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
-                    <div class="mt-6 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                        <h4 class="font-bold text-md text-[var(--accent-secondary-global)] dark:text-[var(--dark-accent-secondary-global)] mb-2">✨ أفكار لبدء المحادثة</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            تحتاج إلهام؟ دع الذكاء الاصطناعي يقترح مواضيع شيقة!
-                        </p>
-                        <button id="generate-icebreakers-btn" class="btn btn-secondary w-full text-sm">
-                            💡 اقترح مواضيع الآن
-                        </button>
-                        <div id="loading-gemini" class="mt-4 text-center" style="display: none;">
-                            <div class="loading-indicator border-top-[var(--accent-secondary-global)]"></div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">جاري توليد الأفكار...</p>
+                <!-- إنشاء منشور -->
+                <div class="create-post-container p-4">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
+                            <button id="open-create-post" class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full py-2 px-4 text-right text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                                ما الذي يدور في ذهنك؟
+                            </button>
                         </div>
-                        <div id="icebreakers-suggestions" class="mt-5 text-sm space-y-3"></div>
-                        <p id="gemini-error-message" class="mt-3 text-xs text-red-500 dark:text-red-400" style="display: none;"></p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="games-section" class="section p-4">
-                <h2 class="text-2xl font-extrabold text-gray-800 dark:text-gray-200 mb-6 text-center" style="color: var(--games-accent);">Zowar Play 🎮</h2>
-                <div class="grid grid-cols-2 gap-5">
-                    <div class="game-card" data-game="ludo">
-                        <div class="game-card-icon">🎲</div>
-                        <h3>يلا لودو</h3>
-                        <p>كلاسيكية ممتعة</p>
-                    </div>
-                    <div class="game-card" data-game="dominoes">
-                        <div class="game-card-icon" style="font-family: 'Arial Unicode MS', 'Lucida Sans Unicode', 'sans-serif'; font-size: 2.5rem;"> Domino</div>
-                        <h3>دومينو</h3>
-                        <p>تحدي وتركيز</p>
-                    </div>
-                    <div class="game-card" data-game="snakes-ladders">
-                        <div class="game-card-icon">🐍</div>
-                        <h3>حية ودرج</h3>
-                        <p>حظ ومرح</p>
-                    </div>
-                    <div class="game-card" data-game="basketball">
-                        <div class="game-card-icon">🏀</div>
-                        <h3>رميات السلة</h3>
-                        <p>اختبر دقتك</p>
-                    </div>
-                    <div class="game-card" data-game="quiz">
-                        <div class="game-card-icon">❓</div>
-                        <h3>أسئلة عامة</h3>
-                        <p>تحدي المعلومات</p>
-                    </div>
-                     <div class="game-card" data-game="challenges">
-                        <div class="game-card-icon">🏆</div>
-                        <h3>تحديات Zowar</h3>
-                        <p>أثبت مهارتك</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="game-lobby-view" class="view p-4" style="background: var(--games-bg);">
-                <button id="back-to-games-list-btn" class="mb-4 text-sm font-semibold" style="color: var(--games-accent);">❮ العودة للألعاب</button>
-                <h2 id="game-lobby-title" class="text-2xl font-bold text-center mb-6" style="color: var(--games-accent);"></h2>
-                <div id="game-specific-ui" class="mb-6 p-4 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-xl"></div>
-                <div class="bg-white/80 dark:bg-black/50 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">اللعب مع الأصدقاء (4 لاعبين)</h3>
-                    <div id="game-lobby-players" class="space-y-2 mb-4">
+                        <div class="flex justify-between mt-3 pt-3 border-t dark:border-gray-700">
+                            <button class="flex items-center justify-center flex-1 text-[var(--danger)]">
+                                <i class="fas fa-image mr-1"></i> صورة
+                            </button>
+                            <button class="flex items-center justify-center flex-1 text-[var(--success)]">
+                                <i class="fas fa-user-tag mr-1"></i> أشخاص
+                            </button>
+                            <button class="flex items-center justify-center flex-1 text-[var(--warning)]">
+                                <i class="fas fa-smile mr-1"></i> مشاعر
+                            </button>
                         </div>
-                    <div class="flex space-x-2 rtl:space-x-reverse">
-                        <button class="btn btn-secondary flex-1 text-sm" style="background-color: var(--games-accent);">➕ دعوة صديق</button>
-                        <button class="btn btn-primary flex-1 text-sm" style="background-color: var(--accent-primary-global);">🚀 ابدأ اللعب!</button>
                     </div>
+                </div>
+                
+                <!-- المنشورات -->
+                <div id="posts-container" class="space-y-4 px-4 pb-4">
+                    <!-- سيتم إضافة المنشورات ديناميكياً -->
                 </div>
             </section>
 
-            <section id="tutoring-section" class="section p-4">
-                 <h2 class="text-2xl font-extrabold text-gray-800 dark:text-gray-200 mb-6 text-center" style="color: var(--tutoring-accent);">مركز Zowar التعليمي 📚</h2>
-                 <p class="text-center text-sm text-gray-600 dark:text-gray-400 mb-8">اكتشف موارد تعليمية ودروس خصوصية في مختلف المواد الدراسية.</p>
-                 <div class="grid grid-cols-2 gap-5">
-                    <div class="tutoring-card" data-subject="math">
-                        <div class="tutoring-card-icon">🧮</div>
-                        <h3>الرياضيات</h3>
+            <!-- قسم الاستكشاف -->
+            <section id="explore-section" class="section">
+                <div class="p-4">
+                    <h2 class="text-xl font-bold mb-4">اكتشف العالم</h2>
+                    
+                    <!-- شريط البحث -->
+                    <div class="relative mb-6">
+                        <input type="text" placeholder="ابحث عن أشخاص أو أماكن..." class="w-full bg-gray-100 dark:bg-gray-700 rounded-full py-3 px-5 pl-12 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]">
+                        <i class="fas fa-search absolute right-4 top-3.5 text-gray-400"></i>
                     </div>
-                    <div class="tutoring-card" data-subject="science">
-                        <div class="tutoring-card-icon">🔬</div>
-                        <h3>العلوم</h3>
-                    </div>
-                    <div class="tutoring-card" data-subject="arabic">
-                        <div class="tutoring-card-icon">ب</div>
-                        <h3>اللغة العربية</h3>
-                    </div>
-                    <div class="tutoring-card" data-subject="history">
-                        <div class="tutoring-card-icon">📜</div>
-                        <h3>التاريخ</h3>
-                    </div>
-                    <div class="tutoring-card" data-subject="geography">
-                        <div class="tutoring-card-icon">🌍</div>
-                        <h3>الجغرافيا</h3>
-                    </div>
-                    <div class="tutoring-card" data-subject="english">
-                        <div class="tutoring-card-icon">Aa</div>
-                        <h3>اللغة الإنجليزية</h3>
-                    </div>
-                 </div>
-                 <div id="tutoring-subject-details" class="mt-8 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-lg" style="display:none;">
-                    <h3 id="tutoring-subject-title" class="text-xl font-bold mb-3 text-center" style="color: var(--tutoring-accent);"></h3>
-                    <p id="tutoring-subject-content" class="text-sm text-gray-700 dark:text-gray-300 text-center"></p>
-                 </div>
-            </section>
-
-
-            <section id="create-post-section" class="section p-4 flex flex-col items-center justify-center">
-                <div class="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl">
-                    <h2 class="text-xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200">إنشاء منشور جديد</h2>
-                    <div id="create-post-step1">
-                        <label for="media-upload" class="block mb-4 text-sm font-medium text-gray-700 dark:text-gray-300">اختر صورة أو فيديو:</label>
-                        <input type="file" id="media-upload" accept="image/*,video/*" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 rtl:file:ml-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--accent-secondary-global)] file:text-white hover:file:bg-[var(--accent-secondary-global)]/90 cursor-pointer mb-6">
-                        <button id="next-to-text-overlay-btn" class="btn btn-primary w-full">التالي</button>
-                    </div>
-                    <div id="create-post-step2" style="display:none;">
-                        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">معاينة وإضافة نص:</label>
-                        <div class="post-media-container mb-4 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center min-h-[250px] relative">
-                            <img id="post-preview-image" src="#" alt="Post preview" style="display:none;" class="max-h-[350px] rounded-lg object-contain">
-                            <video id="post-preview-video" controls style="display:none;" class="max-h-[350px] rounded-lg object-contain"></video>
-                            <p id="post-preview-placeholder" class="text-gray-400 dark:text-gray-500">لا توجد وسائط مختارة</p>
-                            <div id="preview-text-overlay" class="post-text-overlay" style="display:none;"></div>
+                    
+                    <!-- الفئات -->
+                    <div class="mb-6">
+                        <h3 class="font-bold mb-3">تصفح حسب الفئة</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="category-card bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                                <h4>السفر</h4>
+                            </div>
+                            <div class="category-card bg-gradient-to-br from-[var(--danger)] to-[var(--warning)] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                                <h4>الطعام</h4>
+                            </div>
+                            <div class="category-card bg-gradient-to-br from-[var(--success)] to-[#4ad66d] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                                <h4>التكنولوجيا</h4>
+                            </div>
+                            <div class="category-card bg-gradient-to-br from-[#7209b7] to-[#b5179e] text-white rounded-xl p-4 h-24 flex items-end cursor-pointer hover:shadow-lg transition">
+                                <h4>الرياضة</h4>
+                            </div>
                         </div>
-                        <textarea id="post-text-input" rows="2" class="input-field mb-4" placeholder="اكتب النص الذي سيظهر على الصورة/الفيديو..."></textarea>
-                        <div class="mb-4">
-                            <textarea id="post-caption-input" rows="3" class="input-field" placeholder="اكتب تعليقًا لمنشورك..."></textarea>
-                            <button id="generate-caption-btn" class="mt-2 text-xs text-[var(--accent-secondary-global)] dark:text-[var(--dark-accent-secondary-global)] font-semibold hover:underline">✨ اقترح تعليقًا (AI)</button>
-                            <div id="caption-loading-spinner" class="mt-1 text-xs text-gray-500 dark:text-gray-400" style="display:none;">جاري اقتراح تعليق...</div>
-                        </div>
-                        <div class="flex space-x-2 rtl:space-x-reverse">
-                            <button id="back-to-media-upload-btn" class="btn bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-500 w-1/2">السابق</button>
-                            <button id="submit-post-btn" class="btn btn-primary w-1/2">نشر</button>
+                    </div>
+                    
+                    <!-- أشخاص مقترحون -->
+                    <div>
+                        <h3 class="font-bold mb-3">أشخاص قد تعرفهم</h3>
+                        <div id="suggested-people" class="space-y-3">
+                            <!-- سيتم إضافة الأشخاص ديناميكياً -->
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="profile-section" class="section p-0 pt-0">
-                 <div id="user-profile-content"></div>
-            </section>
-            
-            <section id="other-user-profile-view" class="view p-0 pt-0">
-                 <div id="other-user-profile-content"></div>
-            </section>
-
-            <section id="messages-view" class="view h-full flex flex-col">
-                <header class="p-3 bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 rtl:space-x-reverse shadow-sm border-b border-[var(--border-color-global)]">
-                    <button id="back-to-main-from-messages" class="text-2xl text-gray-500 dark:text-gray-400 hover:text-[var(--accent-primary-global)]">❮</button>
-                    <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-200 flex-grow text-center">الرسائل</h3>
-                    <div class="w-8"></div> 
-                </header>
-                <div id="chat-list-view" class="flex-grow">
-                    <div class="p-4 border-b border-[var(--border-color-global)]">
-                        <input type="text" placeholder="ابحث في المحادثات..." class="input-field">
+            <!-- قسم الرسائل -->
+            <section id="messages-section" class="section">
+                <div class="p-4">
+                    <h2 class="text-xl font-bold mb-4">المحادثات</h2>
+                    
+                    <!-- علامات التبويب -->
+                    <div class="flex border-b dark:border-gray-700 mb-4">
+                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">الكل</button>
+                        <button class="tab-btn py-2 px-4 font-medium">غير المقروء</button>
+                        <button class="tab-btn py-2 px-4 font-medium">المجموعات</button>
                     </div>
-                    <h2 class="text-md font-semibold text-gray-700 dark:text-gray-300 p-4 pb-2">الأشخاص النشطون</h2>
-                     <div id="active-users-messages-container" class="flex space-x-3 rtl:space-x-reverse overflow-x-auto px-4 pb-4">
-                        </div>
-                    <h2 class="text-md font-semibold text-gray-700 dark:text-gray-300 p-4 pt-1">كل الرسائل</h2>
-                    <div id="chat-list-items" class="divide-y divide-[var(--border-color-global)]">
+                    
+                    <!-- قائمة المحادثات -->
+                    <div id="conversations-list" class="space-y-3">
+                        <!-- سيتم إضافة المحادثات ديناميكياً -->
                     </div>
                 </div>
-                <div id="chat-view" style="display: none;" class="h-full flex flex-col">
-                    <header class="p-3 bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 rtl:space-x-reverse shadow-sm border-b border-[var(--border-color-global)]">
-                        <button id="back-to-chat-list" class="text-2xl text-gray-500 dark:text-gray-400 hover:text-[var(--accent-primary-global)]">❮</button>
-                        <img id="chat-view-avatar" src="https://placehold.co/40x40" alt="User Avatar" class="w-10 h-10 rounded-full">
-                        <div>
-                            <h3 id="chat-view-name" class="font-semibold text-gray-800 dark:text-gray-200">اسم المستخدم</h3>
-                            <p id="chat-view-status" class="text-xs text-green-500">نشط الآن</p>
+            </section>
+
+            <!-- قسم الإشعارات -->
+            <section id="notifications-section" class="section">
+                <div class="p-4">
+                    <h2 class="text-xl font-bold mb-4">الإشعارات</h2>
+                    
+                    <!-- علامات التبويب -->
+                    <div class="flex border-b dark:border-gray-700 mb-4">
+                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">الكل</button>
+                        <button class="tab-btn py-2 px-4 font-medium">غير المقروء</button>
+                        <button class="tab-btn py-2 px-4 font-medium">الطلبات</button>
+                    </div>
+                    
+                    <!-- قائمة الإشعارات -->
+                    <div id="notifications-list" class="space-y-4">
+                        <!-- سيتم إضافة الإشعارات ديناميكياً -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم الملف الشخصي -->
+            <section id="profile-section" class="section">
+                <div class="p-4">
+                    <!-- رأس الملف الشخصي -->
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="relative mb-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow">
+                            <button class="absolute bottom-0 right-0 bg-[var(--primary)] text-white w-8 h-8 rounded-full flex items-center justify-center">
+                                <i class="fas fa-camera text-sm"></i>
+                            </button>
                         </div>
-                        <button class="mr-auto rtl:ml-auto rtl:mr-0 text-2xl text-[var(--accent-secondary-global)] hover:opacity-80" id="call-btn">✆</button>
-                    </header>
-                    <div id="chat-messages" class="flex-grow p-4 space-y-3 overflow-y-auto bg-gray-50 dark:bg-gray-900/40">
+                        <h2 class="text-xl font-bold">أحمد محمد</h2>
+                        <p class="text-gray-500">@ahmed</p>
+                        <p class="text-center mt-2 max-w-md">مطور ويب ومصمم، أعشق السفر والتكنولوجيا</p>
+                        
+                        <div class="flex space-x-4 mt-4">
+                            <button class="bg-[var(--primary)] text-white px-4 py-1.5 rounded-full text-sm">
+                                <i class="fas fa-user-edit mr-1"></i> تعديل الملف
+                            </button>
+                            <button class="bg-gray-100 dark:bg-gray-700 px-4 py-1.5 rounded-full text-sm">
+                                <i class="fas fa-share-alt mr-1"></i> مشاركة
+                            </button>
+                        </div>
                     </div>
-                    <div id="smart-reply-container" class="p-2 text-center space-x-1 rtl:space-x-reverse bg-gray-100 dark:bg-gray-800 border-t border-[var(--border-color-global)]" style="display:none;">
+                    
+                    <!-- الإحصائيات -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mb-6">
+                        <div class="grid grid-cols-3 divide-x dark:divide-gray-700 text-center">
+                            <div class="px-2">
+                                <div class="font-bold">1,234</div>
+                                <div class="text-xs text-gray-500">المتابعون</div>
+                            </div>
+                            <div class="px-2">
+                                <div class="font-bold">567</div>
+                                <div class="text-xs text-gray-500">يتبع</div>
+                            </div>
+                            <div class="px-2">
+                                <div class="font-bold">89</div>
+                                <div class="text-xs text-gray-500">المنشورات</div>
+                            </div>
+                        </div>
                     </div>
-                    <footer class="p-3 bg-gray-100 dark:bg-gray-800 flex items-center border-t border-[var(--border-color-global)] space-x-2 rtl:space-x-reverse">
-                        <button id="voice-note-btn" class="p-3 text-xl text-gray-500 dark:text-gray-400 hover:text-[var(--accent-secondary-global)]">🎙️</button>
-                        <input id="message-input" type="text" placeholder="اكتب رسالتك..." class="flex-grow p-3 rounded-full bg-white dark:bg-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-[var(--accent-primary-global)] outline-none text-sm">
-                        <button id="send-message-btn" class="p-3 text-2xl text-[var(--accent-primary-global)] dark:text-[var(--dark-accent-primary-global)] hover:opacity-80">➤</button>
-                    </footer>
-                    <div id="voice-recording-indicator" style="display:none;" class="p-3 bg-red-500 text-white text-center text-sm">
-                        🔴 جاري التسجيل... <span id="voice-timer">0:00</span> (انقر للإيقاف)
+                    
+                    <!-- علامات التبويب -->
+                    <div class="flex border-b dark:border-gray-700 mb-4">
+                        <button class="tab-btn active py-2 px-4 font-medium border-b-2 border-[var(--primary)]">المنشورات</button>
+                        <button class="tab-btn py-2 px-4 font-medium">الصور</button>
+                        <button class="tab-btn py-2 px-4 font-medium">الفيديوهات</button>
+                    </div>
+                    
+                    <!-- منشورات المستخدم -->
+                    <div class="grid grid-cols-3 gap-1">
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700"></div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <nav class="bottom-nav">
-            <div class="nav-item active" data-section="home-section">
-                <div class="nav-icon">🏠</div> <span class="nav-text">الرئيسية</span>
-            </div>
-            <div class="nav-item" data-section="explore-section">
-                <div class="nav-icon">✨</div> <span class="nav-text">استكشف</span>
-            </div>
-            <div class="nav-item create-post-btn" data-section="create-post-section">
-                <div class="nav-icon">⊕</div> 
-            </div>
-            <div class="nav-item" data-section="games-section">
-                <div class="nav-icon">🎮</div> <span class="nav-text">ألعاب</span>
-            </div>
-            <div class="nav-item" data-section="tutoring-section">
-                <div class="nav-icon">📚</div> <span class="nav-text">تدريس</span>
-            </div>
-            <div class="nav-item" data-section="profile-section" data-user-id="currentUser"> 
-                <div class="nav-icon">◉</div> <span class="nav-text">ملفي</span>
-            </div>
+        <!-- التنقل السفلي -->
+        <nav class="bottom-nav flex justify-around items-center">
+            <button data-section="home-section" class="nav-item active flex flex-col items-center">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">الرئيسية</span>
+            </button>
+            <button data-section="explore-section" class="nav-item flex flex-col items-center">
+                <i class="fas fa-compass text-xl"></i>
+                <span class="text-xs mt-1">استكشف</span>
+            </button>
+            <button data-section="messages-section" class="nav-item flex flex-col items-center">
+                <i class="fas fa-comments text-xl"></i>
+                <span class="text-xs mt-1">الرسائل</span>
+            </button>
+            <button data-section="notifications-section" class="nav-item flex flex-col items-center">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="text-xs mt-1">الإشعارات</span>
+            </button>
+            <button data-section="profile-section" class="nav-item flex flex-col items-center">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">حسابي</span>
+            </button>
         </nav>
-    </div>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">الإعدادات</h3>
-                <button id="close-settings-modal" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body space-y-6">
-                <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <label for="dark-mode-toggle" class="text-gray-700 dark:text-gray-300 text-sm font-medium">الوضع الداكن</label>
-                    <button id="dark-mode-toggle" class="w-14 h-7 bg-gray-300 dark:bg-gray-600 rounded-full p-1 flex items-center transition-colors duration-300 ease-in-out focus:outline-none ring-2 ring-transparent focus:ring-[var(--accent-primary-global)]">
-                        <span class="w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out translate-x-0 dark:translate-x-7"></span>
+        <!-- نافذة إنشاء منشور -->
+        <div id="create-post-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                    <button id="close-post-modal" class="text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h3 class="font-bold">إنشاء منشور</h3>
+                    <button id="submit-post-btn" class="text-[var(--primary)] font-medium">نشر</button>
+                </div>
+                
+                <div class="p-4">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full">
+                        <textarea id="post-text" class="flex-1 bg-transparent min-h-[100px] focus:outline-none" placeholder="ماذا تريد أن تنشر؟"></textarea>
+                    </div>
+                    
+                    <div id="post-preview" class="mt-4 rounded-xl overflow-hidden hidden">
+                        <img id="post-image-preview" class="w-full max-h-[300px] object-cover">
+                    </div>
+                </div>
+                
+                <div class="p-3 border-t dark:border-gray-700 flex justify-between">
+                    <label class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                        <i class="fas fa-image text-[var(--success)]"></i>
+                        <input type="file" id="post-image-input" accept="image/*" class="hidden">
+                    </label>
+                    
+                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-user-tag text-[var(--primary)]"></i>
+                    </button>
+                    
+                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-smile text-[var(--warning)]"></i>
+                    </button>
+                    
+                    <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-map-marker-alt text-[var(--danger)]"></i>
                     </button>
                 </div>
-                <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">إشعارات الرسائل</span>
-                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100">مفعلة</span>
-                </div>
-                 <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">إشعارات المكالمات</span>
-                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100">مفعلة</span>
-                </div>
-                 <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">جودة تحميل الصور</span>
-                     <span class="text-xs text-gray-500 dark:text-gray-400">عالية</span>
-                </div>
-            </div>
-            <button class="mt-10 w-full btn btn-primary">حفظ التغييرات</button>
-        </div>
-    </div>
-    
-    <div id="calling-screen" class="fixed inset-0 bg-gradient-to-br from-[var(--accent-primary-global)] to-[#1c3faa] text-white flex flex-col items-center justify-center z-[5000] p-8" style="display:none;">
-        <img id="calling-avatar" src="https://placehold.co/120x120/FFFFFF/0A2463?text=C" alt="Calling Avatar" class="w-32 h-32 rounded-full mb-6 border-4 border-white/50 shadow-2xl">
-        <h2 id="calling-name" class="text-3xl font-extrabold mb-2 text-shadow">اسم المتصل</h2>
-        <p id="calling-status-text" class="text-lg text-white/80 mb-10">جاري الاتصال...</p>
-        <div class="flex space-x-6 rtl:space-x-reverse">
-             <button class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold p-4 rounded-full text-2xl w-16 h-16 flex items-center justify-center transition-all duration-200 ease-out hover:scale-110">🔇</button>
-             <button id="end-call-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold p-4 rounded-full text-2xl w-20 h-20 flex items-center justify-center transform scale-110 shadow-lg transition-all duration-200 ease-out hover:scale-125">✆</button>
-             <button class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold p-4 rounded-full text-2xl w-16 h-16 flex items-center justify-center transition-all duration-200 ease-out hover:scale-110">🔊</button>
-        </div>
-    </div>
-    
-    <div id="ai-highlight-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title text-[var(--accent-secondary-global)] flex items-center">✨ ملخص بالذكاء الاصطناعي</h3>
-                <button id="close-ai-highlight-modal" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="ai-summary-text" class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    هذا المنشور يعرض لقطات مذهلة من رحلة استكشافية إلى جبال الألب السويسرية، مع التركيز على المناظر الطبيعية الخلابة وتجربة تسلق الجبال المثيرة. ينصح به لعشاق الطبيعة والمغامرات!
-                </p>
             </div>
         </div>
-    </div>
 
-    <div id="search-modal" class="modal">
-        <div class="modal-content w-full h-full sm:h-auto sm:max-h-[80vh]">
-            <div class="modal-header">
-                <h3 class="modal-title">البحث عن مستخدمين</h3>
-                <button id="close-search-modal-btn" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input id="user-search-input" type="text" placeholder="اكتب اسم المستخدم أو الاسم..." class="input-field mb-4">
-                <div id="search-results-container" class="space-y-3 max-h-[60vh] overflow-y-auto">
-                    </div>
-            </div>
-        </div>
-    </div>
-        
-    <div id="post-comments-modal" class="modal">
-        <div class="modal-content w-full h-full sm:h-auto sm:max-h-[80vh]">
-            <div class="modal-header">
-                <h3 class="modal-title">تعليقات المنشور</h3>
-                <button id="close-post-comments-modal-btn" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="post-comments-list" class="space-y-3 mb-4 max-h-[50vh] overflow-y-auto">
-                    </div>
-                <div class="comment-input-area">
-                    <input id="new-post-comment-input" type="text" placeholder="أضف تعليقًا..." class="input-field flex-grow">
-                    <button id="submit-post-comment-btn" class="btn btn-secondary text-sm p-3 ml-2 rtl:mr-2 rtl:ml-0">إرسال</button>
+        <!-- نافذة المحادثة -->
+        <div id="chat-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex flex-col">
+            <!-- رأس المحادثة -->
+            <div class="bg-white dark:bg-gray-800 flex items-center p-3 shadow-sm">
+                <button id="back-to-messages" class="text-xl mr-2">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <img id="chat-user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full mr-3">
+                <div class="flex-1">
+                    <h3 id="chat-user-name" class="font-bold">سارة محمد</h3>
+                    <p id="chat-user-status" class="text-xs text-green-500">نشطة الآن</p>
                 </div>
+                <button class="text-gray-500 ml-3">
+                    <i class="fas fa-phone-alt"></i>
+                </button>
+                <button class="text-gray-500 ml-3">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="text-gray-500 ml-3">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+            
+            <!-- الرسائل -->
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-900/20 space-y-3">
+                <!-- سيتم إضافة الرسائل ديناميكياً -->
+            </div>
+            
+            <!-- إدخال الرسالة -->
+            <div class="bg-white dark:bg-gray-800 p-3 flex items-center border-t dark:border-gray-700">
+                <button class="text-gray-500 mx-2">
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+                <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center px-3">
+                    <button id="emoji-btn" class="text-gray-500 mr-2">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                    <input type="text" id="message-input" class="flex-1 bg-transparent py-2 focus:outline-none" placeholder="اكتب رسالة...">
+                    <button id="voice-btn" class="text-gray-500 ml-2">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <button id="send-message-btn" class="bg-[var(--primary)] text-white w-10 h-10 rounded-full flex items-center justify-center ml-2">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
-
-    <div id="alert-banner" class="alert-banner">
-        <span id="alert-message"></span>
-    </div>
-
 
     <script>
-        // Firebase Config (Provided by user - For a real app, keep this secure)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCPIcg7RFGlslmgiO0C0miuYztPaxB5S2U", // IMPORTANT: In a real app, manage API keys securely.
-            authDomain: "zowar-a9c69.firebaseapp.com",
-            databaseURL: "https://zowar-a9c69-default-rtdb.firebaseio.com",
-            projectId: "zowar-a9c69",
-            storageBucket: "zowar-a9c69.appspot.com", // Corrected storage bucket
-            messagingSenderId: "200949324467",
-            appId: "1:200949324467:web:54e03ed49857e0af7caec6",
-            measurementId: "G-XBMY1KN43S"
+        // بيانات وهمية متطورة
+        const mockData = {
+            currentUser: {
+                id: 1,
+                name: "أحمد محمد",
+                username: "ahmed",
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                bio: "مطور ويب ومصمم، أعشق السفر والتكنولوجيا",
+                followers: 1234,
+                following: 567,
+                postsCount: 89
+            },
+            
+            users: [
+                {
+                    id: 2,
+                    name: "سارة محمد",
+                    username: "sara",
+                    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                    bio: "مصممة جرافيك ومهتمة بالفنون",
+                    online: true
+                },
+                {
+                    id: 3,
+                    name: "محمد علي",
+                    username: "mohammed",
+                    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+                    bio: "مهندس برمجيات ومدون تقني",
+                    online: false
+                },
+                {
+                    id: 4,
+                    name: "نورا أحمد",
+                    username: "nora",
+                    avatar: "https://randomuser.me/api/portraits/women/33.jpg",
+                    bio: "طبيبة ومتطوعة في الأعمال الخيرية",
+                    online: true
+                },
+                {
+                    id: 5,
+                    name: "خالد سعيد",
+                    username: "khaled",
+                    avatar: "https://randomuser.me/api/portraits/men/55.jpg",
+                    bio: "رجل أعمال ومستثمر",
+                    online: true
+                }
+            ],
+            
+            posts: [
+                {
+                    id: 1,
+                    userId: 2,
+                    text: "تصميم جديد أعمل عليه حالياً لعميل في دبي. ما رأيكم؟",
+                    image: "https://source.unsplash.com/random/600x400?design",
+                    likes: 124,
+                    comments: 23,
+                    shares: 7,
+                    time: "منذ ساعة",
+                    reactions: {
+                        like: 89,
+                        love: 25,
+                        wow: 7,
+                        haha: 3
+                    }
+                },
+                {
+                    id: 2,
+                    userId: 3,
+                    text: "شارك في ورشة عمل اليوم عن الذكاء الاصطناعي وتعلمت الكثير من التقنيات الجديدة! #AI #Tech",
+                    image: "https://source.unsplash.com/random/600x400?tech",
+                    likes: 89,
+                    comments: 15,
+                    shares: 4,
+                    time: "منذ 3 ساعات",
+                    reactions: {
+                        like: 56,
+                        love: 18,
+                        wow: 12,
+                        haha: 3
+                    }
+                },
+                {
+                    id: 3,
+                    userId: 4,
+                    text: "يوم جميل في الحديقة مع الأصدقاء! 🌳",
+                    image: "https://source.unsplash.com/random/600x400?park",
+                    likes: 215,
+                    comments: 32,
+                    shares: 12,
+                    time: "منذ 5 ساعات",
+                    reactions: {
+                        like: 132,
+                        love: 68,
+                        wow: 15
+                    }
+                }
+            ],
+            
+            conversations: [
+                {
+                    id: 1,
+                    userId: 2,
+                    lastMessage: "هل انتهيت من التصميم الذي تحدثنا عنه؟",
+                    time: "10:30 ص",
+                    unread: 2,
+                    messages: [
+                        {
+                            id: 1,
+                            sender: 2,
+                            text: "مرحبًا أحمد! كيف حالك؟",
+                            time: "10:00 ص"
+                        },
+                        {
+                            id: 2,
+                            sender: 1,
+                            text: "أهلا سارة! أنا بخير، شكرًا لك. كيف حالك؟",
+                            time: "10:15 ص"
+                        },
+                        {
+                            id: 3,
+                            sender: 2,
+                            text: "أنا أيضًا بخير الحمدلله. هل انتهيت من التصميم الذي تحدثنا عنه؟",
+                            time: "10:30 ص"
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    userId: 3,
+                    lastMessage: "شكرًا لك على المساعدة في حل المشكلة",
+                    time: "أمس",
+                    unread: 0,
+                    messages: [
+                        {
+                            id: 1,
+                            sender: 3,
+                            text: "مرحبًا أحمد، هل يمكنك مساعدتي في مشكلة في الكود؟",
+                            time: "9:00 م"
+                        },
+                        {
+                            id: 2,
+                            sender: 1,
+                            text: "بالطبع محمد، ما هي المشكلة؟",
+                            time: "9:15 م"
+                        },
+                        {
+                            id: 3,
+                            sender: 3,
+                            text: "شكرًا لك على المساعدة في حل المشكلة",
+                            time: "10:30 م"
+                        }
+                    ]
+                }
+            ],
+            
+            notifications: [
+                {
+                    id: 1,
+                    type: "like",
+                    userId: 2,
+                    postId: 1,
+                    text: "أعجبت سارة بمنشورك",
+                    time: "منذ 5 دقائق",
+                    read: false
+                },
+                {
+                    id: 2,
+                    type: "comment",
+                    userId: 3,
+                    postId: 1,
+                    text: "علق محمد على منشورك: \"تصميم رائع!\"",
+                    time: "منذ ساعة",
+                    read: false
+                },
+                {
+                    id: 3,
+                    type: "follow",
+                    userId: 4,
+                    text: "بدأت نورا متابعتك",
+                    time: "منذ 3 ساعات",
+                    read: true
+                }
+            ]
         };
 
-        // Mock Firebase SDK for single-file prototype (replace with actual imports for real app)
-        const mockFirebase = {
-            initializeApp: (config) => { console.log("Firebase Mock Initialized:", config); return { name: "[DEFAULT]" }; },
-            getAuth: () => ({ currentUser: { uid: "mockUserId", isAnonymous: true }, signInAnonymously: () => Promise.resolve({ user: { uid: "mockUserId", isAnonymous: true } }) }),
-            getFirestore: () => ({
-                doc: (db, path, id) => ({ path: `${path}/${id}` }),
-                collection: (db, path) => ({ path }),
-                getDoc: (docRef) => Promise.resolve({ exists: () => true, data: () => mockFirebase.mockDbData[docRef.path.split('/').pop()] || {} }), // Simulate getDoc
-                setDoc: (docRef, data) => { console.log("Mock Firestore Set:", docRef.path, data); mockFirebase.mockDbData[docRef.path.split('/').pop()] = data; return Promise.resolve(); },
-                addDoc: (collRef, data) => { const id = `mockDoc${Object.keys(mockFirebase.mockDbData).length}`; mockFirebase.mockDbData[id] = data; console.log("Mock Firestore Add:", collRef.path, id, data); return Promise.resolve({ id }); },
-                onSnapshot: (query, callback) => { console.log("Mock onSnapshot registered for:", query.path); setTimeout(() => callback({ docs: Object.values(mockFirebase.mockDbData).map(d => ({ id: d.id || "mockId", data: () => d })) }), 100); return () => {}; }, // Simulate onSnapshot
-            }),
-            getAnalytics: () => ({ logEvent: (name, params) => console.log("Mock Analytics Event:", name, params) }),
-            mockDbData: {} // Simple in-memory store for mock Firestore
-        };
-
-        const app = mockFirebase.initializeApp(firebaseConfig);
-        const auth = mockFirebase.getAuth();
-        const db = mockFirebase.getFirestore();
-        // const analytics = mockFirebase.getAnalytics(app); // Uncomment if needed
-
+        // عناصر DOM
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+        const createPostModal = document.getElementById('create-post-modal');
+        const chatModal = document.getElementById('chat-modal');
+        const sideMenu = document.getElementById('side-menu');
+        
+        // تهيئة التطبيق
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Element Selectors (Consolidated) ---
-            const getEl = (id) => document.getElementById(id);
-            const querySelAll = (sel) => document.querySelectorAll(sel);
-
-            const splashScreen = getEl('splash-screen');
-            const sections = querySelAll('.section');
-            const views = querySelAll('.view');
-            const navItems = querySelAll('.nav-item');
-            const postsFeed = getEl('posts-feed'); 
-            const aiHighlightModal = getEl('ai-highlight-modal');
-            const closeAiHighlightModalBtn = getEl('close-ai-highlight-modal');
+            // إخفاء شاشة التحميل بعد 2 ثانية
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                }, 500);
+            }, 2000);
             
-            const messagesHeaderBtn = getEl('messages-header-btn');
-            const unreadMessagesBadge = getEl('unread-messages-badge');
-            const messagesView = getEl('messages-view'); 
-            const chatListView = getEl('chat-list-view'); 
-            const chatView = getEl('chat-view'); 
-            const chatListItems = getEl('chat-list-items'); 
-            const backToChatListBtn = getEl('back-to-chat-list');
-            const backToMainFromMessagesBtn = getEl('back-to-main-from-messages'); 
-            const messageInput = getEl('message-input');
-            const sendMessageBtn = getEl('send-message-btn');
-            const voiceNoteBtn = getEl('voice-note-btn');
-            const voiceRecordingIndicator = getEl('voice-recording-indicator');
-            const voiceTimer = getEl('voice-timer');
-            const smartReplyContainer = getEl('smart-reply-container');
+            // تحميل البيانات
+            loadPosts();
+            loadSuggestedPeople();
+            loadConversations();
+            loadNotifications();
             
-            const settingsModal = getEl('settings-modal');
-            const closeSettingsModalBtn = getEl('close-settings-modal');
-            const darkModeToggleBtn = getEl('dark-mode-toggle');
+            // إعداد القائمة الجانبية
+            document.getElementById('menu-btn').addEventListener('click', () => {
+                sideMenu.classList.remove('hidden');
+            });
             
-            const callBtn = getEl('call-btn');
-            const callingScreen = getEl('calling-screen');
-            const endCallBtn = getEl('end-call-btn');
+            document.getElementById('close-menu').addEventListener('click', () => {
+                sideMenu.classList.add('hidden');
+            });
             
-            const generateIcebreakersBtn = getEl('generate-icebreakers-btn');
-            const icebreakersSuggestionsDiv = getEl('icebreakers-suggestions');
-            const loadingGemini = getEl('loading-gemini');
-            const geminiErrorMessageEl = getEl('gemini-error-message');
-            
-            const openSearchModalBtn = getEl('open-search-modal-btn');
-            const searchModal = getEl('search-modal');
-            const closeSearchModalBtn = getEl('close-search-modal-btn');
-            const userSearchInput = getEl('user-search-input');
-            const searchResultsContainer = getEl('search-results-container');
-            
-            const userProfileContent = getEl('user-profile-content');
-            const otherUserProfileContent = getEl('other-user-profile-content');
-            const otherUserProfileView = getEl('other-user-profile-view');
-            
-            const postCommentsModal = getEl('post-comments-modal');
-            const closePostCommentsModalBtn = getEl('close-post-comments-modal-btn');
-            const postCommentsList = getEl('post-comments-list');
-            const newPostCommentInput = getEl('new-post-comment-input');
-            const submitPostCommentBtn = getEl('submit-post-comment-btn');
-
-            const alertBanner = getEl('alert-banner');
-            const alertMessage = getEl('alert-message');
-
-            const createPostStep1 = getEl('create-post-step1');
-            const createPostStep2 = getEl('create-post-step2');
-            const mediaUploadInput = getEl('media-upload');
-            const nextToTextOverlayBtn = getEl('next-to-text-overlay-btn');
-            const postPreviewImage = getEl('post-preview-image');
-            const postPreviewVideo = getEl('post-preview-video');
-            const postPreviewPlaceholder = getEl('post-preview-placeholder');
-            const previewTextOverlay = getEl('preview-text-overlay');
-            const postTextInput = getEl('post-text-input');
-            const postCaptionInput = getEl('post-caption-input');
-            const generateCaptionBtn = getEl('generate-caption-btn');
-            const captionLoadingSpinner = getEl('caption-loading-spinner');
-            const backToMediaUploadBtn = getEl('back-to-media-upload-btn');
-            const submitPostBtn = getEl('submit-post-btn');
-            let uploadedMediaFile = null;
-
-            const findNearbyPeopleCard = getEl('find-nearby-people-card');
-            const nearbyPeopleResults = getEl('nearby-people-results');
-            const nearbyUsersList = getEl('nearby-users-list');
-            const storiesContainer = getEl('stories-container') || querySelAll('#home-section .overflow-x-auto')[0];
-            const zowarSpacesContainer = getEl('zowar-spaces-container') || querySelAll('#explore-section .mb-8 .space-y-4')[0];
-            const geoRoomsGrid = getEl('geo-rooms-grid') || querySelAll('#explore-section > div:last-child .grid')[0]; 
-            const activeUsersMessagesContainer = getEl('active-users-messages-container');
-
-            const gamesSection = getEl('games-section');
-            const gameLobbyView = getEl('game-lobby-view');
-            const gameLobbyTitle = getEl('game-lobby-title');
-            const gameSpecificUI = getEl('game-specific-ui');
-            const gameLobbyPlayers = getEl('game-lobby-players');
-            const backToGamesListBtn = getEl('back-to-games-list-btn');
-            const tutoringSection = getEl('tutoring-section');
-            const tutoringSubjectDetails = getEl('tutoring-subject-details');
-            const tutoringSubjectTitle = getEl('tutoring-subject-title');
-            const tutoringSubjectContent = getEl('tutoring-subject-content');
-
-
-            let isRecording = false;
-            let voiceRecordInterval;
-            let voiceRecordSeconds = 0;
-            let currentOpenPostIdForComment = null; 
-            let unreadMessagesCount = 3; 
-
-            let uiClickSynth, notificationSynth, messageSendSynth, callRingingSynth, callingProgressSynth, postSentSynth, gameSelectSynth, diceRollSynth, basketballShootSynth, quizCorrectSynth, quizWrongSynth;
-            const masterVolume = -18; 
-
-            // --- Mock Data (Moved to top for early access) ---
-            const mockUsers = [
-                { id: "currentUser", username: "zawar_king", displayName: "ملك الزوار", avatar: "https://source.unsplash.com/random/100x100?king,man,handsome", bio: "أعيش الحياة بلحظاتها، أشارككم إبداعاتي وتجاربي الفريدة. Zowar هو عالمي!", postsCount: 152, followers: 2580, following: 310, comments: [ {postId: 1, text: "إبداع لا يوصف!"}, {postId:2, text: "هذا ما نحتاجه تماماً."} ] },
-                { id: "user2", username: "explorer_ali", displayName: "علي المستكشف", avatar: "https://source.unsplash.com/random/100x100?man,traveler,adventure", bio: "رحالة ومصور فوتوغرافي. أشارككم مغامراتي حول العالم.", postsCount: 250, followers: 5200, following: 150, comments: [] },
-                { id: "user3", username: "chef_fatima", displayName: "الشيف فاطمة", avatar: "https://source.unsplash.com/random/100x100?woman,chef,food", bio: "أعشق الطبخ ومشاركة وصفاتي الشهية. تابعوني لتذوق الإبداع.", postsCount: 180, followers: 12300, following: 80, comments: [] },
-                { id: "user4", username: "artist_omar", displayName: "عمر الفنان", avatar: "https://source.unsplash.com/random/100x100?man,artist,painting", bio: "أرى العالم من خلال عدستي وفرشاتي. الفن هو حياتي.", postsCount: 310, followers: 8750, following: 220, comments: [] },
-                { id: "user5", username: "sara_reads", displayName: "سارة القارئة", avatar: "https://source.unsplash.com/random/100x100?woman,book,library", bio: "أعشق الكتب والقراءة. أشارك مراجعاتي وتوصياتي.", postsCount: 95, followers: 3100, following: 120, comments: [] }
-            ];
-            let mockPosts = [ 
-                { id:1, type: 'image', userId: "user2", caption: "غروب الشمس الساحر من جبال الأنديز. لا شيء يضاهي هذا الجمال! 🌅 #طبيعة #سفر #مغامرة", textOverlay: "الأنديز 2025", likes: 1850, commentsCount: 78, mediaUrl: "https://source.unsplash.com/random/600x800?andes,sunset", postComments: [{user: "نور", text: "منظر يخطف الأنفاس!"}, {user:"أحمد", text:"أتمنى زيارة هذا المكان يوماً ما."}] },
-                { id:2, type: 'video', userId: "user3", caption: "مقتطفات من ورشة عمل صناعة الحلويات الشرقية. استمتعوا! 🍰🍯 #حلويات_شرقية #طبخ #فن", textOverlay: "ورشة الحلويات", likes: 1120, commentsCount: 130, mediaUrl: "https://dummyjson.com/video/1", postComments: [{user: "سارة", text: "تبدو لذيذة جداً!"}] }, 
-                { id:3, type: 'image', userId: "currentUser", caption: "قهوتي الصباحية وإطلالة على المدينة. بداية يوم مثالية! ☕️🏙️ #صباح_الخير #قهوة #هدوء", textOverlay: "صباح الخير Zowar", likes: 950, commentsCount: 45, mediaUrl: "https://source.unsplash.com/random/600x800?coffee,city,morning", postComments: [] },
-            ];
-            const mockChats = [
-                { id: 1, userId: "user2", lastMessage: "بالتأكيد، الفكرة تبدو رائعة!", unread: 2, online: true },
-                { id: 2, userId: "user3", lastMessage: "هل جربت الوصفة الجديدة؟", unread: 1, online: true },
-            ];
-
-            // --- Initial Setup ---
-            auth.signInAnonymously() // Mock Firebase Auth
-                .then(() => {
-                    console.log("User signed in anonymously (mock)");
-                    // Proceed with app initialization that might depend on auth
-                })
-                .catch((error) => {
-                    console.error("Anonymous sign-in failed (mock):", error);
-                });
-
-            setTimeout(() => { splashScreen.classList.add('hidden'); }, 2800);
-            setActiveSection('home-section'); 
-            loadDarkModePreference();
-            initializeSounds();
-            populateCurrentUserProfile(); 
-            updateUnreadMessagesBadge();
-            populateStories(); 
-            populateZowarSpaces(); 
-            populateGeoRooms(); 
-            populateActiveUsersInMessages();
-
-            // --- UI Population & Event Listeners ---
+            // التنقل بين الأقسام
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    playUiClickSound();
-                    const sectionId = item.dataset.section;
-                    setActiveSection(sectionId, sectionId === "create-post-section");
-                    if (sectionId === 'profile-section' && item.dataset.userId === 'currentUser') {
-                        populateCurrentUserProfile();
-                    }
-                });
-            });
-            
-            messagesHeaderBtn.addEventListener('click', () => {
-                playUiClickSound();
-                setActiveSection(null); 
-                messagesView.classList.add('active');
-                chatListView.style.display = 'block'; 
-                chatView.style.display = 'none'; 
-                unreadMessagesCount = 0; 
-                updateUnreadMessagesBadge();
-            });
-            
-            if(backToMainFromMessagesBtn) { 
-                backToMainFromMessagesBtn.addEventListener('click', () => {
-                    playUiClickSound();
-                    messagesView.classList.remove('active');
-                    setActiveSection('home-section'); 
-                });
-            }
-
-            // --- Sound Initialization & Playback ---
-            function initializeSounds() {
-                try {
-                    uiClickSynth = new Tone.PluckSynth({ volume: masterVolume + 8, attackNoise: 0.05, dampening: 5000, resonance: 0.01 }).toDestination(); 
-                    notificationSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.12, sustain: 0.05, release: 0.3 }, volume: masterVolume - 2 }).toDestination(); 
-                    messageSendSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.005, decay: 0.08, sustain: 0.01, release: 0.1 }, volume: masterVolume + 2 }).toDestination(); 
-                    postSentSynth = new Tone.Synth({ oscillator: {type: "amsine", harmonicity: 1.2 }, envelope: { attack: 0.02, decay: 0.25, sustain: 0.05, release: 0.35 }, volume: masterVolume -1 }).toDestination(); 
-                    gameSelectSynth = new Tone.Synth({ oscillator: {type: "pulse", width: 0.6}, envelope: { attack: 0.01, decay: 0.1, sustain:0.05, release: 0.2}, volume: masterVolume }).toDestination();
-                    diceRollSynth = new Tone.NoiseSynth({ noise: { type: "pink" }, envelope: { attack: 0.005, decay: 0.15, sustain: 0 }, volume: masterVolume -5 }).toDestination();
-                    basketballShootSynth = new Tone.Synth({ oscillator: {type: "sawtooth"}, envelope: {attack:0.01, decay:0.1, sustain:0.05, release:0.1}, volume: masterVolume -3}).toDestination(); 
-                    quizCorrectSynth = new Tone.Synth({ oscillator: {type: "triangle"}, envelope: {attack:0.01, decay:0.1, sustain:0.1, release:0.1}, volume: masterVolume }).toDestination(); 
-                    quizWrongSynth = new Tone.Synth({ oscillator: {type: "square"}, envelope: {attack:0.01, decay:0.2, sustain:0, release:0.1}, volume: masterVolume -3 }).toDestination(); 
-
-
-                    callRingingSynth = new Tone.Loop(time => { 
-                        new Tone.Synth({ oscillator: { type: "pulse", width: 0.35 }, envelope: { attack: 0.01, decay: 0.28, sustain: 0, release: 0.1 }, volume: masterVolume - 3 }).toDestination().triggerAttackRelease("B5", "8n", time);
-                        new Tone.Synth({ oscillator: { type: "pulse", width: 0.35 }, envelope: { attack: 0.01, decay: 0.28, sustain: 0, release: 0.1 }, volume: masterVolume - 3 }).toDestination().triggerAttackRelease("F#5", "8n", time + 0.35);
-                    }, "1.25s");
-                    callingProgressSynth = new Tone.Loop(time => {
-                         new Tone.Synth({ oscillator: { type: "pwm", modulationFrequency: 0.35 }, envelope: { attack: 0.025, decay: 0.65, sustain: 0, release: 0.1 }, volume: masterVolume - 5 }).toDestination().triggerAttackRelease("G#4", "1n", time);
-                    }, "1.9s");
-                    Tone.Transport.start();
-                } catch (err) { console.warn("Tone.js synths could not be initialized.", err); }
-            }
-            function playSound(synth, note, duration) { 
-                if (synth && Tone.context.state === 'running') {
-                    try { synth.triggerAttackRelease(note, duration); } catch (e) { console.warn("Sound play failed", e); }
-                } else if (synth && Tone.context.state !== 'running') {
-                    Tone.start().then(() => { if (synth) synth.triggerAttackRelease(note, duration); }).catch(e => console.warn("Tone.start() failed", e));
-                }
-            }
-            function playUiClickSound() { playSound(uiClickSynth, "E6", "100n"); } 
-            function playNotificationSound() { playSound(notificationSynth, "G6", "12n"); } 
-            function playMessageSendSound() { playSound(messageSendSynth, "B5", "50n"); }
-            function playPostSentSound() { playSound(postSentSynth, "D5", "6n"); }
-            function playGameSelectSound() { playSound(gameSelectSynth, "F#4", "16n"); }
-            function playDiceRollSound() { if (diceRollSynth && Tone.context.state === 'running') diceRollSynth.triggerAttackRelease("0.15"); else if (diceRollSynth) Tone.start().then(()=>diceRollSynth.triggerAttackRelease("0.15")); }
-            function playBasketballShootSound() { playSound(basketballShootSynth, "C4", "8n"); setTimeout(() => playSound(basketballShootSynth, "G3", "8n"), 80); } 
-            function playQuizCorrectSound() { playSound(quizCorrectSynth, "C5", "16n"); setTimeout(()=> playSound(quizCorrectSynth, "E5", "16n"),100); setTimeout(()=> playSound(quizCorrectSynth, "G5", "16n"),200);}
-            function playQuizWrongSound() { playSound(quizWrongSynth, "C3", "4n");}
-
-            function startCallRingingSound() { if (callRingingSynth && Tone.context.state === 'running') callRingingSynth.start(0); else if (callRingingSynth) Tone.start().then(()=>callRingingSynth.start(0));}
-            function stopCallRingingSound() { if (callRingingSynth) callRingingSynth.stop(0); }
-            function startCallingProgressSound() { if (callingProgressSynth && Tone.context.state === 'running') callingProgressSynth.start(0); else if(callingProgressSynth) Tone.start().then(()=>callingProgressSynth.start(0));}
-            function stopCallingProgressSound() { if (callingProgressSynth) callingProgressSynth.stop(0); }
-            document.body.addEventListener('click', () => {
-                if (Tone.context.state !== 'running') { Tone.start().catch(e => console.warn("Tone.start() on body click failed", e)); }
-            }, { once: true });
-
-            // --- Dark Mode ---
-            function loadDarkModePreference() {
-                const darkModeToggle = getEl('dark-mode-toggle');
-                if (localStorage.getItem('darkModeZowar') === 'true' || (!localStorage.getItem('darkModeZowar') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
-                    document.body.classList.add('dark-mode');
-                    if (darkModeToggle) {
-                        const span = darkModeToggle.querySelector('span');
-                        if (span) span.style.transform = 'translateX(1.75rem)';
-                    }
-                }
-            }
-            darkModeToggleBtn.addEventListener('click', () => {
-                playUiClickSound();
-                document.body.classList.toggle('dark-mode');
-                const span = darkModeToggleBtn.querySelector('span');
-                if (span) {
-                    span.style.transform = document.body.classList.contains('dark-mode') ? 'translateX(1.75rem)' : 'translateX(0px)';
-                }
-                localStorage.setItem('darkModeZowar', document.body.classList.contains('dark-mode'));
-            });
-
-            // --- Alert Banner ---
-            function showAlert(message, type = 'info') { 
-                alertMessage.textContent = message;
-                alertBanner.className = 'alert-banner'; 
-                if (type === 'success') alertBanner.style.backgroundColor = 'var(--accent-secondary-global)';
-                else if (type === 'error') alertBanner.style.backgroundColor = 'var(--danger-color-global)';
-                else alertBanner.style.backgroundColor = 'var(--accent-primary-global)'; 
-
-                alertBanner.classList.add('show');
-                setTimeout(() => {
-                    alertBanner.classList.remove('show');
-                }, 3000);
-            }
-            
-            // --- Stories ---
-            function populateStories() {
-                if (!storiesContainer) return;
-                storiesContainer.innerHTML = ''; 
-                mockUsers.slice(0,5).forEach((user, index) => {
-                    const storyEl = document.createElement('div');
-                    storyEl.className = 'story-circle flex-shrink-0';
-                    storyEl.innerHTML = `<img src="${user.avatar}" alt="Story by ${user.displayName}">`;
-                    storiesContainer.appendChild(storyEl);
-                });
-                const addStoryEl = document.createElement('div');
-                addStoryEl.className = 'story-circle flex-shrink-0 flex items-center justify-center border-dashed border-gray-400 dark:border-gray-600';
-                addStoryEl.style.borderImage = 'none';
-                addStoryEl.innerHTML = `<span class="text-3xl text-gray-400 dark:text-gray-500">+</span>`;
-                storiesContainer.appendChild(addStoryEl);
-            }
-            
-            // --- Zowar Spaces & Geo Rooms (Explore Section) ---
-            function populateZowarSpaces() {
-                if (!zowarSpacesContainer) return;
-                zowarSpacesContainer.innerHTML = ''; 
-
-                const mockSpaces = [
-                    { title: "نقاشات حول مستقبل الذكاء الاصطناعي 🤖", host: "د. خالد", listeners: 78, live: true, avatars: ["https://source.unsplash.com/random/24x24?man,tech", "https://source.unsplash.com/random/24x24?woman,scientist", "https://source.unsplash.com/random/24x24?person,glasses"] },
-                    { title: "أمسية شعرية مع نجوم الكلمة 📜", host: "أمل الشاعرة", listeners: 120, live: true, avatars: ["https://source.unsplash.com/random/24x24?woman,poet", "https://source.unsplash.com/random/24x24?man,book", "https://source.unsplash.com/random/24x24?person,elegant"] }
-                ];
-                mockSpaces.forEach(space => {
-                    const spaceEl = document.createElement('div');
-                    spaceEl.className = 'zowar-space-card';
-                    let avatarHTML = space.avatars.map((avatar, idx) => `<img src="${avatar}" class="w-6 h-6 rounded-full border-2 border-white/50 ${idx > 0 ? '-mr-2 rtl:-ml-2 rtl:mr-0' : ''}">`).join('');
-                    spaceEl.innerHTML = `
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-bold text-md mb-1">${space.title}</h4>
-                                <p class="text-xs opacity-80">مع <span class="font-semibold">${space.host}</span></p>
-                            </div>
-                            ${space.live ? '<span class="text-xs bg-red-500 px-2.5 py-1 rounded-full font-semibold shadow">مباشر</span>' : ''}
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2 rtl:space-x-reverse">
-                            ${avatarHTML}
-                            <span class="text-xs opacity-70">+ ${space.listeners} مستمع</span>
-                        </div>`;
-                    zowarSpacesContainer.appendChild(spaceEl);
-                });
-                const startSpaceBtn = document.createElement('button');
-                startSpaceBtn.className = 'btn btn-secondary w-full mt-3 text-sm';
-                startSpaceBtn.innerHTML = '🎤 ابدأ غرفة صوتية';
-                zowarSpacesContainer.appendChild(startSpaceBtn);
-            }
-
-            function populateGeoRooms() {
-                if(!geoRoomsGrid) return;
-                geoRoomsGrid.innerHTML = ''; 
-
-                const mockGeoRooms = [
-                    { name: "مجتمع أهل الحي 🏡", members: 23, gradient: "from-[var(--accent-primary-global)] to-[#1E40AF]" },
-                    { name: "عشاق القهوة ☕", members: 45, gradient: "from-[var(--accent-secondary-global)] to-[#2A8588]" },
-                ];
-                mockGeoRooms.forEach(room => {
-                    const roomEl = document.createElement('div');
-                    roomEl.className = `p-5 rounded-xl text-white shadow-xl bg-gradient-to-br ${room.gradient} transition-transform hover:scale-[1.02] cursor-pointer`;
-                    roomEl.innerHTML = `
-                        <h3 class="font-bold text-md mb-1">${room.name}</h3>
-                        <p class="text-xs opacity-80">${room.members} عضو نشط الآن</p>`;
-                    geoRoomsGrid.appendChild(roomEl);
-                });
-            }
-            
-            // --- Posts Feed ---
-            function populatePostsFeed() {
-                postsFeed.innerHTML = ''; 
-                mockPosts.slice().reverse().forEach(postData => { 
-                    const user = mockUsers.find(u => u.id === postData.userId) || {username: "مستخدم غير معروف", displayName: "مستخدم غير معروف", avatar: "https://placehold.co/40x40/cccccc/FFFFFF?text=?"};
-                    const postElement = document.createElement('div');
-                    postElement.className = 'post-card';
-                    postElement.dataset.postId = postData.id;
-                    postElement.innerHTML = `
-                        <div class="p-3 flex items-center space-x-3 rtl:space-x-reverse">
-                            <img src="${user.avatar}" class="w-10 h-10 rounded-full">
-                            <div>
-                                <p class="font-semibold text-sm text-gray-800 dark:text-gray-200">${user.displayName}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">@${user.username}</p>
-                            </div>
-                        </div>
-                        <div class="post-media-container">
-                            ${postData.type === 'image' ? `<img src="${postData.mediaUrl}" alt="Post media">` : `<video src="${postData.mediaUrl}" controls class="w-full h-auto max-h-[60vh] object-contain"></video>`}
-                            ${postData.textOverlay ? `<div class="post-text-overlay">${postData.textOverlay}</div>` : ''}
-                        </div>
-                        <div class="p-3">
-                            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-2">${postData.caption}</p>
-                            ${postData.hasAiHighlight ? '<button class="ai-highlight-btn text-xs bg-[var(--highlight-gold-global)] text-black px-2 py-0.5 rounded-md font-semibold hover:opacity-90">✨ ملخص AI</button>' : ''}
-                        </div>
-                        <div class="post-actions">
-                            <button class="like-btn">❤ <span class="text-xs ml-1">${postData.likes}</span></button>
-                            <button class="comment-btn" data-post-id="${postData.id}">💬 <span class="text-xs ml-1">${postData.commentsCount}</span></button>
-                            <button>➥</button>
-                        </div>
-                    `;
-                    postsFeed.appendChild(postElement);
-                });
-            }
-            postsFeed.addEventListener('click', (e) => {
-                if (e.target.closest('.ai-highlight-btn')) {
-                    playUiClickSound();
-                    document.getElementById('ai-summary-text').textContent = "هذا المنشور يعرض لقطات مذهلة، مع التركيز على التفاصيل الدقيقة. ينصح به للمهتمين بالجودة البصرية!";
-                    aiHighlightModal.classList.add('active');
-                }
-                const likeBtn = e.target.closest('.like-btn');
-                if (likeBtn) {
-                    playUiClickSound();
-                    likeBtn.classList.toggle('liked');
-                }
-                const commentBtn = e.target.closest('.comment-btn');
-                if (commentBtn) {
-                    playUiClickSound();
-                    currentOpenPostIdForComment = commentBtn.dataset.postId;
-                    populatePostComments(currentOpenPostIdForComment);
-                    postCommentsModal.classList.add('active');
-                }
-            });
-            if(closeAiHighlightModalBtn) closeAiHighlightModalBtn.addEventListener('click', () => { playUiClickSound(); aiHighlightModal.classList.remove('active'); });
-
-            // --- Post Comments Modal ---
-            function populatePostComments(postId) {
-                postCommentsList.innerHTML = '';
-                const post = mockPosts.find(p => p.id == postId);
-                if (post && post.postComments) {
-                    post.postComments.forEach(comment => {
-                        const commentDiv = document.createElement('div');
-                        commentDiv.className = 'comment-item flex items-start space-x-2 rtl:space-x-reverse';
-                        const commenter = mockUsers.find(u => u.displayName === comment.user) || { avatar: "https://placehold.co/32x32/cccccc/FFFFFF?text=?" };
-                        commentDiv.innerHTML = `
-                            <img src="${commenter.avatar}" class="w-8 h-8 rounded-full mt-1">
-                            <div>
-                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-200">${comment.user}</span>
-                                <p class="text-xs text-gray-600 dark:text-gray-400">${comment.text}</p>
-                            </div>`;
-                        postCommentsList.appendChild(commentDiv);
-                    });
-                }
-                if (postCommentsList.innerHTML === '') {
-                    postCommentsList.innerHTML = '<p class="text-sm text-center text-gray-500 dark:text-gray-400">لا توجد تعليقات بعد. كن أول من يعلق!</p>';
-                }
-            }
-            submitPostCommentBtn.addEventListener('click', () => {
-                const commentText = newPostCommentInput.value.trim();
-                if (commentText && currentOpenPostIdForComment) {
-                    playMessageSendSound();
-                    const post = mockPosts.find(p => p.id == currentOpenPostIdForComment);
-                    const currentUser = mockUsers.find(u => u.id === "currentUser");
-                    if (post && currentUser) {
-                        post.postComments.push({ user: currentUser.displayName, text: commentText });
-                        post.commentsCount++; 
-                        populatePostComments(currentOpenPostIdForComment); 
-                        const postCardCommentBtn = postsFeed.querySelector(`.post-card[data-post-id="${currentOpenPostIdForComment}"] .comment-btn span`);
-                        if (postCardCommentBtn) postCardCommentBtn.textContent = post.commentsCount;
-                        currentUser.comments.push({postId: currentOpenPostIdForComment, text: commentText});
-                    }
-                    newPostCommentInput.value = '';
-                }
-            });
-            if(closePostCommentsModalBtn) closePostCommentsModalBtn.addEventListener('click', () => { playUiClickSound(); postCommentsModal.classList.remove('active'); });
-
-            // --- Create Post Modal ---
-            nextToTextOverlayBtn.addEventListener('click', () => {
-                playUiClickSound();
-                const file = mediaUploadInput.files[0];
-                if (file) {
-                    uploadedMediaFile = file; 
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        if (file.type.startsWith('image/')) {
-                            postPreviewImage.src = e.target.result;
-                            postPreviewImage.style.display = 'block';
-                            postPreviewVideo.style.display = 'none';
-                        } else if (file.type.startsWith('video/')) {
-                            postPreviewVideo.src = e.target.result;
-                            postPreviewVideo.style.display = 'block';
-                            postPreviewImage.style.display = 'none';
-                        }
-                        postPreviewPlaceholder.style.display = 'none';
-                    }
-                    reader.readAsDataURL(file);
-                    createPostStep1.style.display = 'none';
-                    createPostStep2.style.display = 'block';
-                } else {
-                    showAlert("الرجاء اختيار ملف صورة أو فيديو أولاً.", "error");
-                }
-            });
-            backToMediaUploadBtn.addEventListener('click', () => {
-                playUiClickSound();
-                createPostStep2.style.display = 'none';
-                createPostStep1.style.display = 'block';
-                previewTextOverlay.style.display = 'none'; 
-            });
-            postTextInput.addEventListener('input', (e) => {
-                const text = e.target.value;
-                if (text.trim() !== '') {
-                    previewTextOverlay.textContent = text;
-                    previewTextOverlay.style.display = 'block';
-                } else {
-                    previewTextOverlay.style.display = 'none';
-                }
-            });
-            generateCaptionBtn.addEventListener('click', async () => {
-                playUiClickSound();
-                captionLoadingSpinner.style.display = 'block';
-                generateCaptionBtn.disabled = true;
-                const mediaType = uploadedMediaFile ? (uploadedMediaFile.type.startsWith('image/') ? 'صورة' : 'فيديو') : 'محتوى';
-                const overlayText = postTextInput.value.trim();
-                let prompt = `اقترح تعليقًا جذابًا لمنشور على وسائل التواصل الاجتماعي. نوع الوسائط هو ${mediaType}.`;
-                if (overlayText) {
-                    prompt += ` النص المتراكب على الوسائط هو: "${overlayText}".`;
-                }
-                prompt += " اجعل التعليق قصيرًا وملهمًا ومناسبًا للثقافة العربية، وأضف بعض الهاشتاغات المناسبة.";
-
-                try {
-                    const caption = await callGeminiForText(prompt);
-                    postCaptionInput.value = caption;
-                } catch (error) {
-                    showAlert("فشل اقتراح التعليق. حاول مرة أخرى.", "error");
-                } finally {
-                    captionLoadingSpinner.style.display = 'none';
-                    generateCaptionBtn.disabled = false;
-                }
-            });
-            submitPostBtn.addEventListener('click', () => {
-                const caption = postCaptionInput.value.trim();
-                const textOverlay = postTextInput.value.trim();
-                const currentUser = mockUsers.find(u => u.id === "currentUser");
-
-                if (!uploadedMediaFile) { showAlert("لم يتم اختيار وسائط للنشر!", "error"); return; }
-                if (!caption) { showAlert("الرجاء كتابة تعليق للمنشور.", "error"); return; }
-
-                const newPost = {
-                    id: mockPosts.length + 1, 
-                    type: uploadedMediaFile.type.startsWith('image/') ? 'image' : 'video',
-                    userId: currentUser.id,
-                    caption: caption,
-                    textOverlay: textOverlay || null,
-                    likes: 0,
-                    commentsCount: 0,
-                    mediaUrl: URL.createObjectURL(uploadedMediaFile), 
-                    postComments: []
-                };
-                mockPosts.push(newPost);
-                currentUser.postsCount++;
-                
-                playPostSentSound();
-                showAlert("تم نشر منشورك بنجاح!", "success");
-                populatePostsFeed(); 
-                populateCurrentUserProfile(); 
-                
-                createPostStep2.style.display = 'none';
-                createPostStep1.style.display = 'block';
-                mediaUploadInput.value = '';
-                postTextInput.value = '';
-                postCaptionInput.value = '';
-                postPreviewImage.style.display = 'none'; postPreviewImage.src = "#";
-                postPreviewVideo.style.display = 'none'; postPreviewVideo.src = "";
-                previewTextOverlay.style.display = 'none';
-                postPreviewPlaceholder.style.display = 'block';
-                uploadedMediaFile = null;
-                
-                setActiveSection('home-section'); 
-            });
-
-
-            // --- Chat & Messages ---
-            function updateUnreadMessagesBadge() {
-                if (unreadMessagesCount > 0) {
-                    unreadMessagesBadge.textContent = unreadMessagesCount;
-                    unreadMessagesBadge.style.display = 'flex';
-                } else {
-                    unreadMessagesBadge.style.display = 'none';
-                }
-            }
-             function populateActiveUsersInMessages() {
-                if (!activeUsersMessagesContainer) return;
-                activeUsersMessagesContainer.innerHTML = '';
-                mockUsers.filter(u => u.id !== "currentUser" && mockChats.some(c => c.userId === u.id && c.online)).slice(0, 5)
-                    .forEach(user => {
-                        const userEl = document.createElement('div');
-                        userEl.className = 'active-user-avatar text-center flex-shrink-0 w-16';
-                        userEl.innerHTML = `
-                            <img src="${user.avatar}" alt="${user.displayName}" class="mx-auto story-circle border-[var(--accent-secondary-global)]">
-                            <p class="text-xs mt-1.5 text-gray-600 dark:text-gray-400 truncate">${user.displayName}</p>`;
-                        activeUsersMessagesContainer.appendChild(userEl);
-                    });
-            }
-            function populateChatList() {
-                if(!chatListItems) return;
-                chatListItems.innerHTML = '';
-                mockChats.forEach(chatData => {
-                    const user = mockUsers.find(u => u.id === chatData.userId) || {username: "مستخدم محذوف", displayName: "مستخدم محذوف", avatar: "https://placehold.co/50x50/cccccc/FFFFFF?text=X"};
-                    const chatItem = document.createElement('div');
-                    chatItem.className = 'p-4 flex items-center space-x-3 rtl:space-x-reverse hover:bg-gray-100 dark:hover:bg-gray-700/50 cursor-pointer transition-colors';
-                    chatItem.dataset.chatId = chatData.id;
-                    chatItem.innerHTML = `
-                        <div class="relative">
-                            <img src="${user.avatar}" alt="${user.displayName}" class="w-12 h-12 rounded-full">
-                            ${chatData.online ? '<span class="absolute bottom-0 right-0 block w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full ring-1 ring-green-300 dark:ring-green-500"></span>' : ''}
-                        </div>
-                        <div class="flex-grow overflow-hidden">
-                            <h3 class="font-semibold text-gray-800 dark:text-gray-200 truncate">${user.displayName}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chatData.lastMessage}</p>
-                        </div>
-                        ${chatData.unread > 0 ? `<div class="bg-[var(--accent-primary-global)] text-white text-xs rounded-full px-2.5 py-1 font-semibold">${chatData.unread}</div>` : ''}
-                    `;
-                    chatItem.addEventListener('click', () => openChat(chatData, user));
-                    chatListItems.appendChild(chatItem);
-                });
-            }
-            async function openChat(chatData, userData) {
-                playUiClickSound();
-                getEl('chat-view-avatar').src = userData.avatar;
-                getEl('chat-view-name').textContent = userData.displayName;
-                getEl('chat-view-status').textContent = chatData.online ? "نشط الآن" : "غير متصل";
-                getEl('chat-view-status').className = `text-xs ${chatData.online ? 'text-green-500' : 'text-gray-500 dark:text-gray-400'}`;
-                
-                const messagesContainer = getEl('chat-messages');
-                messagesContainer.innerHTML = ''; 
-                addMessageToChat(`أهلاً ${userData.displayName}! كيف حالك؟`, false);
-                addMessageToChat("أنا بخير، ماذا عنك؟", true);
-                if(chatData.id === 1) addMessageToChat("هل يمكننا الحديث عن مشروع زوار؟", false);
-                
-                chatListView.style.display = 'none';
-                chatView.style.display = 'flex';
-                const lastReceivedMessage = messagesContainer.querySelectorAll('.chat-bubble.received:last-child')[0]?.textContent;
-                if (lastReceivedMessage) {
-                    await fetchSmartReplies(lastReceivedMessage);
-                } else {
-                    if(smartReplyContainer) smartReplyContainer.style.display = 'none';
-                }
-            }
-            if(backToChatListBtn) backToChatListBtn.addEventListener('click', () => { playUiClickSound(); chatView.style.display = 'none'; chatListView.style.display = 'block'; if(smartReplyContainer) smartReplyContainer.style.display = 'none'; });
-            if(sendMessageBtn) sendMessageBtn.addEventListener('click', async () => {
-                const messageText = messageInput.value.trim();
-                if (messageText) {
-                    addMessageToChat(messageText, true);
-                    playMessageSendSound();
-                    messageInput.value = '';
-                    if(smartReplyContainer) smartReplyContainer.style.display = 'none'; 
+                    const sectionId = item.getAttribute('data-section');
+                    showSection(sectionId);
                     
-                    const replyText = "جميل جداً! أتفق معك.";
-                    setTimeout(async () => { 
-                        addMessageToChat(replyText, false); 
-                        playNotificationSound(); 
-                        unreadMessagesCount++; 
-                        updateUnreadMessagesBadge();
-                        await fetchSmartReplies(replyText);
-                    }, 1500);
-                }
+                    // تحديث العنصر النشط في القائمة السفلية
+                    navItems.forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                });
             });
-            if(messageInput) messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); sendMessageBtn.click(); } });
-            if(voiceNoteBtn) voiceNoteBtn.addEventListener('click', () => {
-                playUiClickSound();
-                if (!isRecording) {
-                    isRecording = true;
-                    voiceRecordingIndicator.style.display = 'flex';
-                    voiceNoteBtn.innerHTML = '🛑'; 
-                    voiceRecordSeconds = 0;
-                    voiceTimer.textContent = '0:00';
-                    voiceRecordInterval = setInterval(() => {
-                        voiceRecordSeconds++;
-                        const minutes = Math.floor(voiceRecordSeconds / 60);
-                        const seconds = voiceRecordSeconds % 60;
-                        voiceTimer.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                    }, 1000);
-                } else {
-                    isRecording = false;
-                    voiceRecordingIndicator.style.display = 'none';
-                    voiceNoteBtn.innerHTML = '🎙️'; 
-                    clearInterval(voiceRecordInterval);
-                    addMessageToChat(`ملاحظة صوتية (${voiceTimer.textContent})`, true, true);
-                    playMessageSendSound(); 
-                }
+            
+            // إنشاء منشور
+            document.getElementById('open-create-post').addEventListener('click', () => {
+                createPostModal.classList.remove('hidden');
             });
-            function addMessageToChat(text, isSent, isVoiceNote = false) {
-                const messagesContainer = getEl('chat-messages');
-                const bubble = document.createElement('div');
-                if (isVoiceNote) {
-                    bubble.className = `chat-bubble sent voice-note-bubble`;
-                    bubble.innerHTML = `
-                        <div class="waveform"><span></span><span></span><span></span><span></span></div>
-                        <span>${text}</span>`;
-                } else {
-                    bubble.className = `chat-bubble ${isSent ? 'sent' : 'received'}`;
-                    bubble.textContent = text;
-                }
-                messagesContainer.appendChild(bubble);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-
-            // --- User Profiles & Search ---
-            function populateUserProfile(userId, containerElement) {
-                const user = mockUsers.find(u => u.id === userId);
-                if (!user) { containerElement.innerHTML = '<p>لم يتم العثور على المستخدم.</p>'; return; }
-
-                let profileHTML = `
-                    <div class="profile-header-bg" style="background: var(${document.body.classList.contains('dark-mode') ? '--dark-profile-accent' : '--profile-accent'});"></div>
-                    <div class="p-4 profile-avatar-container">
-                        <div class="text-center">
-                            <div class="relative inline-block profile-avatar">
-                                <img src="${user.avatar}" alt="Profile Picture">
-                                ${userId === "currentUser" ? '<span class="absolute bottom-1 right-1 block w-6 h-6 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full ring-2 ring-green-300 dark:ring-green-500"></span>' : ''}
-                            </div>
-                            <h2 class="text-2xl font-extrabold text-gray-800 dark:text-gray-200 mt-3">${user.displayName}</h2>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">@${user.username}</p>
-                            <p id="user-bio-text-${userId}" class="text-sm text-gray-600 dark:text-gray-300 mt-3 max-w-md mx-auto px-4">${user.bio}</p>
-                            ${userId === "currentUser" ? '<button id="generate-bio-btn" class="mt-2 text-xs text-[var(--accent-secondary-global)] dark:text-[var(--dark-accent-secondary-global)] font-semibold hover:underline">✨ أنشئ نبذة (AI)</button><div id="bio-loading-spinner" class="mt-1 text-xs text-gray-500 dark:text-gray-400" style="display:none;">جاري إنشاء النبذة...</div>' : ''}
-                        </div>
-                        <div class="mt-6 grid grid-cols-3 gap-2 text-center p-4 bg-white dark:bg-gray-800/60 rounded-xl shadow-lg">
-                            <div><p class="text-lg font-bold text-gray-800 dark:text-gray-200">${user.postsCount}</p><p class="text-xs text-gray-500 dark:text-gray-400">منشور</p></div>
-                            <div><p class="text-lg font-bold text-gray-800 dark:text-gray-200">${user.followers}</p><p class="text-xs text-gray-500 dark:text-gray-400">متابع</p></div>
-                            <div><p class="text-lg font-bold text-gray-800 dark:text-gray-200">${user.following}</p><p class="text-xs text-gray-500 dark:text-gray-400">يتابع</p></div>
-                        </div>
-                        <div class="mt-6 space-y-3 px-2">`;
-
-                if (userId === "currentUser") {
-                    profileHTML += `
-                        <button id="edit-display-name-btn" class="w-full p-3.5 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 rounded-lg text-gray-700 dark:text-gray-200 font-semibold flex items-center justify-between text-sm transition-colors">
-                            <span>تعديل اسم العرض</span> <span class="transform -scale-x-100 text-gray-400 dark:text-gray-500">❮</span>
-                        </button>
-                        <button id="view-my-comments-btn" class="w-full p-3.5 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 rounded-lg text-gray-700 dark:text-gray-200 font-semibold flex items-center justify-between text-sm transition-colors">
-                            <span>عرض تعليقاتي اليومية</span> <span class="text-gray-400 dark:text-gray-500">📝</span>
-                        </button>
-                        <div id="my-daily-comments-list" class="mt-3 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg space-y-2" style="display:none;"></div>
-                        <button id="settings-btn-profile" class="w-full p-3.5 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 rounded-lg text-gray-700 dark:text-gray-200 font-semibold flex items-center justify-between text-sm transition-colors">
-                            <span>الإعدادات والتفضيلات</span> <span class="text-gray-400 dark:text-gray-500">⚙</span>
-                        </button>
-                        <button class="w-full p-3.5 bg-red-50 dark:bg-red-900/40 dark:hover:bg-red-900/60 hover:bg-red-100 rounded-lg text-red-600 dark:text-red-400 font-semibold text-sm transition-colors">تسجيل الخروج</button>`;
-                } else {
-                     profileHTML += `
-                        <div class="flex space-x-2 rtl:space-x-reverse">
-                            <button class="w-full btn btn-primary text-sm">متابعة</button>
-                            <button class="w-full btn bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm">مراسلة</button>
-                        </div>
-                        <button class="block-user-btn w-full btn btn-danger text-sm mt-2" data-user-id-to-block="${user.id}">حظر ${user.displayName}</button>`;
-                }
-                profileHTML += `</div></div>`; 
-                containerElement.innerHTML = profileHTML;
-
-                if (userId === "currentUser") {
-                    getEl('settings-btn-profile')?.addEventListener('click', () => { playUiClickSound(); settingsModal.classList.add('active'); });
-                    getEl('edit-display-name-btn')?.addEventListener('click', () => {
-                        playUiClickSound();
-                        showAlert("يمكن تغيير اسم العرض مرتين فقط كل 15 يومًا. (هذه محاكاة)", "info");
-                    });
-                    getEl('view-my-comments-btn')?.addEventListener('click', toggleMyDailyComments);
-                    getEl('generate-bio-btn')?.addEventListener('click', generateAiBio);
-                } else {
-                    containerElement.querySelector('.block-user-btn')?.addEventListener('click', (e) => {
-                        playUiClickSound();
-                        const userIdToBlock = e.target.dataset.userIdToBlock;
-                        const userToBlock = mockUsers.find(u => u.id === userIdToBlock);
-                        showAlert(`تم حظر ${userToBlock.displayName} بنجاح. (محاكاة)`, 'success');
-                    });
-                }
-            }
-            function populateCurrentUserProfile() { populateUserProfile("currentUser", userProfileContent); }
-            function toggleMyDailyComments() {
-                playUiClickSound();
-                const commentsListDiv = getEl('my-daily-comments-list');
-                const currentUser = mockUsers.find(u => u.id === "currentUser");
-                if (commentsListDiv.style.display === 'none') {
-                    commentsListDiv.innerHTML = ''; 
-                    if (currentUser.comments && currentUser.comments.length > 0) {
-                        currentUser.comments.forEach(comment => {
-                             const post = mockPosts.find(p => p.id == comment.postId);
-                             const postOwner = mockUsers.find(u => u.id === post?.userId);
-                            const commentEl = document.createElement('div');
-                            commentEl.className = 'text-xs p-2.5 bg-white dark:bg-gray-800 rounded-md shadow-sm';
-                            commentEl.innerHTML = `علقت على منشور لـ <span class="font-semibold text-[var(--accent-secondary-global)]">${postOwner?.displayName || 'مستخدم'}</span>: <span class="italic">"${comment.text}"</span>`;
-                            commentsListDiv.appendChild(commentEl);
-                        });
-                    } else {
-                        commentsListDiv.innerHTML = '<p class="text-xs text-center text-gray-500 dark:text-gray-400 py-2">لا توجد تعليقات لعرضها.</p>';
-                    }
-                    commentsListDiv.style.display = 'block';
-                } else {
-                    commentsListDiv.style.display = 'none';
-                }
-            }
-
-            openSearchModalBtn.addEventListener('click', () => { playUiClickSound(); searchModal.classList.add('active'); userSearchInput.focus(); });
-            closeSearchModalBtn.addEventListener('click', () => { playUiClickSound(); searchModal.classList.remove('active'); });
-            userSearchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                searchResultsContainer.innerHTML = '';
-                if (searchTerm.length < 1) { 
-                    searchResultsContainer.innerHTML = '<p class="text-sm text-center text-gray-500 dark:text-gray-400 py-4">اكتب للبحث عن مستخدمين...</p>';
-                    return;
-                }
-                const results = mockUsers.filter(user => user.id !== "currentUser" && (user.username.toLowerCase().includes(searchTerm) || user.displayName.toLowerCase().includes(searchTerm)));
-                if (results.length > 0) {
-                    results.forEach(user => {
-                        const resultDiv = document.createElement('div');
-                        resultDiv.className = 'user-search-item';
-                        resultDiv.dataset.userId = user.id;
-                        resultDiv.innerHTML = `
-                            <img src="${user.avatar}" alt="${user.displayName}">
-                            <div>
-                                <h4>${user.displayName}</h4>
-                                <p>@${user.username}</p>
-                            </div>`;
-                        resultDiv.addEventListener('click', () => {
-                            playUiClickSound();
-                            populateUserProfile(user.id, otherUserProfileContent);
-                            setActiveSection(null); 
-                            otherUserProfileView.classList.add('active');
-                            searchModal.classList.remove('active');
-                        });
-                        searchResultsContainer.appendChild(resultDiv);
-                    });
-                } else {
-                    searchResultsContainer.innerHTML = '<p class="text-sm text-center text-gray-500 dark:text-gray-400 py-4">لم يتم العثور على مستخدمين.</p>';
+            
+            document.getElementById('close-post-modal').addEventListener('click', () => {
+                createPostModal.classList.add('hidden');
+            });
+            
+            document.getElementById('post-image-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        document.getElementById('post-preview').classList.remove('hidden');
+                        document.getElementById('post-image-preview').src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
             
-            // --- Settings Modal ---
-            if(closeSettingsModalBtn) closeSettingsModalBtn.addEventListener('click', () => { playUiClickSound(); settingsModal.classList.remove('active'); });
-
-            // --- Calling Screen ---
-            if(callBtn) callBtn.addEventListener('click', () => { 
-                playUiClickSound();
-                const currentChatName = getEl('chat-view-name').textContent;
-                const currentChatAvatar = getEl('chat-view-avatar').src;
-                getEl('calling-name').textContent = currentChatName;
-                getEl('calling-avatar').src = currentChatAvatar;
-                getEl('calling-status-text').textContent = "جاري الاتصال...";
-                callingScreen.style.display = 'flex';
-                startCallingProgressSound();
-                setTimeout(() => {
-                    if (callingScreen.style.display === 'flex') {
-                        getEl('calling-status-text').textContent = "يرن...";
-                        stopCallingProgressSound();
-                        startCallRingingSound();
-                    }
-                }, 3500); 
-                 setTimeout(() => { 
-                    if (callingScreen.style.display === 'flex') {
-                         endCallBtn.click(); 
-                    }
-                }, 9000); 
-             });
-            if(endCallBtn) endCallBtn.addEventListener('click', () => {
-                playUiClickSound();
-                callingScreen.style.display = 'none';
-                stopCallRingingSound();
-                stopCallingProgressSound();
+            document.getElementById('submit-post-btn').addEventListener('click', () => {
+                const postText = document.getElementById('post-text').value;
+                if (postText.trim() !== '') {
+                    createPost(postText);
+                    createPostModal.classList.add('hidden');
+                }
             });
-
-            // --- Gemini API Helper ---
-            async function callGeminiForText(promptText) {
-                let chatHistory = [{ role: "user", parts: [{ text: promptText }] }];
-                const payload = { contents: chatHistory };
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            // الدردشة
+            document.getElementById('back-to-messages').addEventListener('click', () => {
+                chatModal.classList.add('hidden');
+            });
+            
+            document.getElementById('send-message-btn').addEventListener('click', sendMessage);
+            
+            document.getElementById('message-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // تسجيل الخروج
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                alert("تم تسجيل الخروج بنجاح");
+                showSection('home-section');
+            });
+            
+            // تبديل الوضع الليلي
+            const darkModeToggle = document.createElement('button');
+            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            darkModeToggle.className = 'p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700';
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            document.querySelector('nav').appendChild(darkModeToggle);
+        });
+        
+        // وظائف التطبيق
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+        
+        function loadPosts() {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = '';
+            
+            mockData.posts.forEach(post => {
+                const user = mockData.users.find(u => u.id === post.userId);
                 
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Gemini API Error:", errorData);
-                    throw new Error(`API Error: ${response.status}. ${errorData?.error?.message || 'Unknown error'}`);
-                }
-                const result = await response.json();
-                if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error("Unexpected Gemini API response structure:", result);
-                    throw new Error("لم يتم العثور على محتوى صالح في استجابة Gemini API.");
-                }
-            }
-            
-            // --- Gemini API Integrations ---
-            if(generateIcebreakersBtn) generateIcebreakersBtn.addEventListener('click', () => { playUiClickSound(); fetchIcebreakers(); });
-            async function fetchIcebreakers() { 
-                loadingGemini.style.display = 'block';
-                icebreakersSuggestionsDiv.innerHTML = '';
-                geminiErrorMessageEl.style.display = 'none';
-                generateIcebreakersBtn.disabled = true;
-                generateIcebreakersBtn.classList.add('opacity-70', 'cursor-not-allowed');
-                const prompt = "اقترح 3 أسئلة كسر جمود أو مواضيع نقاش شيقة ومبتكرة لمجموعة من الأشخاص في غرفة دردشة جغرافية يلتقون لأول مرة. يجب أن تكون الاقتراحات باللغة العربية، خفيفة، ممتعة، ومناسبة لثقافة عربية متنوعة. اجعلها تشجع على التفاعل الإيجابي.";
-                try {
-                    const suggestionsText = await callGeminiForText(prompt);
-                    const suggestionsArray = suggestionsText.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s);
-                    if (suggestionsArray.length > 0) {
-                        suggestionsArray.forEach(suggestion => {
-                            const p = document.createElement('p');
-                            p.className = 'gemini-suggestion-item';
-                            p.textContent = "💡 " + suggestion;
-                            icebreakersSuggestionsDiv.appendChild(p);
-                        });
-                    } else { icebreakersSuggestionsDiv.innerHTML = '<p class="text-slate-500 dark:text-slate-400">لم يتم العثور على اقتراحات.</p>'; }
-                } catch (error) {
-                    console.error('Error fetching icebreakers:', error);
-                    geminiErrorMessageEl.textContent = `حدث خطأ: ${error.message}.`;
-                    geminiErrorMessageEl.style.display = 'block';
-                } finally {
-                    loadingGemini.style.display = 'none';
-                    generateIcebreakersBtn.disabled = false;
-                    generateIcebreakersBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                }
-             }
-
-            async function fetchSmartReplies(lastMessage) {
-                if (!lastMessage || !smartReplyContainer) { if(smartReplyContainer) smartReplyContainer.style.display = 'none'; return; }
-                smartReplyContainer.innerHTML = '<p class="text-xs text-gray-400 dark:text-gray-500 py-1">✨ جاري توليد ردود ذكية...</p>';
-                smartReplyContainer.style.display = 'flex'; 
-
-                const prompt = `اقتراح 3 ردود قصيرة وذكية على الرسالة التالية في محادثة باللغة العربية: "${lastMessage}"`;
-                try {
-                    const repliesText = await callGeminiForText(prompt);
-                    const repliesArray = repliesText.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s && s.length < 30).slice(0,3); 
-                    smartReplyContainer.innerHTML = '';
-                    if (repliesArray.length > 0) {
-                        repliesArray.forEach(reply => {
-                            const btn = document.createElement('button');
-                            btn.className = 'smart-reply-btn';
-                            btn.textContent = reply;
-                            btn.onclick = () => {
-                                playUiClickSound();
-                                messageInput.value = reply;
-                                messageInput.focus();
-                                smartReplyContainer.style.display = 'none';
-                            };
-                            smartReplyContainer.appendChild(btn);
-                        });
-                    } else {
-                        smartReplyContainer.style.display = 'none';
-                    }
-                } catch (error) {
-                    console.error("Error fetching smart replies:", error);
-                    smartReplyContainer.style.display = 'none';
-                }
-            }
-            
-            async function generateAiBio() {
-                playUiClickSound();
-                const bioLoadingSpinner = getEl('bio-loading-spinner');
-                const generateBioBtn = getEl('generate-bio-btn');
-                const userBioText = getEl(`user-bio-text-currentUser`); 
-
-                if (bioLoadingSpinner) bioLoadingSpinner.style.display = 'block';
-                if (generateBioBtn) generateBioBtn.disabled = true;
-
-                const currentUser = mockUsers.find(u => u.id === "currentUser");
-                const prompt = `أنشئ نبذة شخصية (bio) جذابة ومختصرة لحساب على وسائل التواصل الاجتماعي لشخص اسمه "${currentUser.displayName}" واسم مستخدمه "@${currentUser.username}". اجعلها تعكس شخصية محبة للحياة ومشاركة للتجارب. باللغة العربية.`;
-                try {
-                    const newBio = await callGeminiForText(prompt);
-                    if (userBioText) userBioText.textContent = newBio;
-                    currentUser.bio = newBio; 
-                    showAlert("تم إنشاء نبذة شخصية جديدة!", "success");
-                } catch (error) {
-                    showAlert("فشل إنشاء النبذة. حاول مرة أخرى.", "error");
-                } finally {
-                    if (bioLoadingSpinner) bioLoadingSpinner.style.display = 'none';
-                    if (generateBioBtn) generateBioBtn.disabled = false;
-                }
-            }
-
-
-            // --- Find Nearby People ---
-            if(findNearbyPeopleCard) findNearbyPeopleCard.addEventListener('click', () => {
-                playUiClickSound();
-                nearbyPeopleResults.style.display = 'block';
-                nearbyUsersList.innerHTML = ''; 
-                const loadingIndicator = nearbyPeopleResults.querySelector('.loading-indicator');
-                const loadingText = nearbyPeopleResults.querySelector('p');
-                if (loadingIndicator) loadingIndicator.style.display = 'block';
-                if (loadingText) loadingText.style.display = 'block';
-
-                setTimeout(() => { 
-                    if (loadingIndicator) loadingIndicator.style.display = 'none';
-                    if (loadingText) loadingText.style.display = 'none';
-                    const nearbyMockUsers = mockUsers.filter(u => u.id !== "currentUser").slice(0, 3); 
-                    if (nearbyMockUsers.length > 0) {
-                        nearbyMockUsers.forEach((user, index) => {
-                            const distance = ["يبعد 300 متر", "في نفس الحي", "يبعد 1.2 كم"];
-                            const userCard = document.createElement('div');
-                            userCard.className = 'user-search-item p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md';
-                            userCard.dataset.userId = user.id;
-                            userCard.innerHTML = `
-                                <img src="${user.avatar}" alt="${user.displayName}" class="w-12 h-12 rounded-full">
-                                <div class="flex-grow">
-                                    <h4 class="font-semibold text-md text-gray-800 dark:text-gray-200">${user.displayName}</h4>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">@${user.username}</p>
-                                    <p class="text-xs text-[var(--accent-secondary-global)] dark:text-[var(--dark-accent-secondary-global)] mt-1">${distance[index % distance.length]}</p>
+                const postElement = document.createElement('div');
+                postElement.className = 'post-card bg-white dark:bg-gray-800';
+                postElement.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <img src="${user.avatar}" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h3 class="font-bold">${user.name}</h3>
+                                    <p class="text-xs text-gray-500">${post.time}</p>
                                 </div>
-                                <button class="btn btn-secondary btn-sm p-2 text-xs">تواصل</button>`;
-                            userCard.addEventListener('click', (e) => {
-                                if (!e.target.closest('button')) { 
-                                    playUiClickSound();
-                                    populateUserProfile(user.id, otherUserProfileContent);
-                                    setActiveSection(null); 
-                                    otherUserProfileView.classList.add('active');
-                                }
-                            });
-                            nearbyUsersList.appendChild(userCard);
-                        });
-                    } else {
-                        nearbyUsersList.innerHTML = '<p class="text-sm text-center text-gray-500 dark:text-gray-400 py-4">لا يوجد مستخدمون قريبون حاليًا.</p>';
-                    }
-                }, 2000);
+                            </div>
+                            <button class="text-gray-500">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="mb-3">${post.text}</p>
+                        
+                        ${post.image ? `
+                        <div class="relative mb-3">
+                            <img src="${post.image}" class="w-full rounded-lg">
+                            <div class="absolute bottom-3 right-3 flex space-x-2">
+                                <button class="reaction-btn bg-white/80 dark:bg-gray-800/80 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-heart text-[var(--danger)]"></i>
+                                </button>
+                                <button class="reaction-btn bg-white/80 dark:bg-gray-800/80 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-comment text-[var(--primary)]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="flex items-center justify-between text-gray-500 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-heart text-[var(--danger)] mr-1"></i>
+                                    <span>${post.likes}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-comment text-[var(--primary)] mr-1"></i>
+                                    <span>${post.comments}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span>${post.shares} مشاركات</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between border-t dark:border-gray-700 pt-3 mt-3">
+                            <button class="post-action-btn flex-1 flex items-center justify-center">
+                                <i class="fas fa-thumbs-up mr-1"></i> أعجبني
+                            </button>
+                            <button class="post-action-btn flex-1 flex items-center justify-center">
+                                <i class="fas fa-comment mr-1"></i> تعليق
+                            </button>
+                            <button class="post-action-btn flex-1 flex items-center justify-center">
+                                <i class="fas fa-share mr-1"></i> مشاركة
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                postsContainer.appendChild(postElement);
+            });
+        }
+        
+        function loadSuggestedPeople() {
+            const container = document.getElementById('suggested-people');
+            container.innerHTML = '';
+            
+            mockData.users.forEach(user => {
+                if (user.id !== mockData.currentUser.id) {
+                    const userElement = document.createElement('div');
+                    userElement.className = 'flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl shadow';
+                    userElement.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <img src="${user.avatar}" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 class="font-bold">${user.name}</h3>
+                                <p class="text-xs text-gray-500">@${user.username}</p>
+                                <p class="text-xs mt-1">${user.bio}</p>
+                            </div>
+                        </div>
+                        <button class="follow-btn px-3 py-1 bg-[var(--primary)] text-white rounded-full text-sm hover:bg-[var(--secondary)] transition">
+                            متابعة
+                        </button>
+                    `;
+                    
+                    container.appendChild(userElement);
+                }
+            });
+        }
+        
+        function loadConversations() {
+            const container = document.getElementById('conversations-list');
+            container.innerHTML = '';
+            
+            mockData.conversations.forEach(conversation => {
+                const user = mockData.users.find(u => u.id === conversation.userId);
+                
+                const conversationElement = document.createElement('div');
+                conversationElement.className = 'conversation-item flex items-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow cursor-pointer hover:shadow-md transition';
+                conversationElement.setAttribute('data-conversation-id', conversation.id);
+                conversationElement.innerHTML = `
+                    <div class="relative">
+                        <img src="${user.avatar}" class="w-12 h-12 rounded-full">
+                        ${user.online ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></span>' : ''}
+                    </div>
+                    <div class="flex-1 mr-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold">${user.name}</h3>
+                            <span class="text-xs text-gray-500">${conversation.time}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 truncate">${conversation.lastMessage}</p>
+                    </div>
+                    ${conversation.unread > 0 ? `
+                    <div class="w-5 h-5 bg-[var(--danger)] text-white text-xs rounded-full flex items-center justify-center">
+                        ${conversation.unread}
+                    </div>
+                    ` : ''}
+                `;
+                
+                conversationElement.addEventListener('click', () => {
+                    openChat(conversation.id);
+                });
+                
+                container.appendChild(conversationElement);
+            });
+        }
+        
+        function loadNotifications() {
+            const container = document.getElementById('notifications-list');
+            container.innerHTML = '';
+            
+            mockData.notifications.forEach(notification => {
+                const user = mockData.users.find(u => u.id === notification.userId);
+                
+                const notificationElement = document.createElement('div');
+                notificationElement.className = `notification-item flex items-start p-3 bg-white dark:bg-gray-800 rounded-xl shadow ${!notification.read ? 'border-r-4 border-[var(--primary)]' : ''}`;
+                notificationElement.innerHTML = `
+                    <img src="${user.avatar}" class="w-10 h-10 rounded-full mr-3">
+                    <div class="flex-1">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold">${user.name}</h3>
+                            <span class="text-xs text-gray-500">${notification.time}</span>
+                        </div>
+                        <p>${notification.text}</p>
+                        ${notification.postId ? `
+                        <div class="mt-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">
+                            عرض المنشور
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(notificationElement);
+            });
+        }
+        
+        function createPost(text) {
+            const newPost = {
+                id: mockData.posts.length + 1,
+                userId: mockData.currentUser.id,
+                text: text,
+                image: document.getElementById('post-image-preview').src || null,
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                time: "الآن",
+                reactions: {
+                    like: 0,
+                    love: 0,
+                    wow: 0
+                }
+            };
+            
+            mockData.posts.unshift(newPost);
+            loadPosts();
+            
+            // إعادة تعيين النموذج
+            document.getElementById('post-text').value = '';
+            document.getElementById('post-preview').classList.add('hidden');
+            document.getElementById('post-image-preview').src = '';
+            document.getElementById('post-image-input').value = '';
+        }
+        
+        function openChat(conversationId) {
+            const conversation = mockData.conversations.find(c => c.id === conversationId);
+            if (!conversation) return;
+            
+            const user = mockData.users.find(u => u.id === conversation.userId);
+            
+            document.getElementById('chat-user-avatar').src = user.avatar;
+            document.getElementById('chat-user-name').textContent = user.name;
+            document.getElementById('chat-user-status').textContent = user.online ? "نشطة الآن" : "غير متصل";
+            document.getElementById('chat-user-status').className = user.online ? "text-xs text-green-500" : "text-xs text-gray-500";
+            
+            // تحميل الرسائل
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = '';
+            
+            conversation.messages.forEach(message => {
+                const isMe = message.sender === mockData.currentUser.id;
+                addMessage(message.text, isMe);
             });
             
-            // --- Games Section Logic ---
-            if(gamesSection) {
-                gamesSection.addEventListener('click', (e) => {
-                    const gameCard = e.target.closest('.game-card');
-                    if (gameCard) {
-                        playGameSelectSound();
-                        const gameType = gameCard.dataset.game;
-                        openGameLobby(gameType);
-                    }
-                });
-            }
-
-            if(backToGamesListBtn) {
-                backToGamesListBtn.addEventListener('click', () => {
-                    playUiClickSound();
-                    gameLobbyView.classList.remove('active');
-                    setActiveSection('games-section');
-                });
-            }
-
-            function openGameLobby(gameType) {
-                setActiveSection(null); 
-                gameLobbyView.classList.add('active');
-                let gameName = "";
-                let specificUIHTML = "";
-
-                switch(gameType) {
-                    case 'ludo':
-                        gameName = "يلا لودو";
-                        specificUIHTML = `
-                            <p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">استعد لمواجهة حماسية في لعبة اللودو الكلاسيكية!</p>
-                            <div class="dice-container">
-                                <div class="dice" id="ludo-dice">
-                                    <div class="dice-face face-1">1</div> <div class="dice-face face-2">2</div>
-                                    <div class="dice-face face-3">3</div> <div class="dice-face face-4">4</div>
-                                    <div class="dice-face face-5">5</div> <div class="dice-face face-6">6</div>
-                                </div>
-                            </div>
-                            <button id="roll-ludo-dice-btn" class="btn btn-primary w-full text-sm mt-2">🎲 ارمي النرد</button>`;
-                        break;
-                    case 'dominoes':
-                        gameName = "دومينو";
-                        specificUIHTML = `<p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">هل أنت مستعد لتحدي الدومينو؟ رتب قطعك بذكاء!</p> <img src="https://placehold.co/300x150/8E44AD/FFFFFF?text=Dominoes+Table" class="mx-auto rounded-lg shadow-md">`;
-                        break;
-                    case 'snakes-ladders':
-                        gameName = "حية ودرج";
-                        specificUIHTML = `
-                            <p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">الحظ هو صديقك في هذه اللعبة المثيرة! تجنب الثعابين واصعد السلالم.</p>
-                            <div class="dice-container">
-                                <div class="dice" id="snakes-dice">
-                                    <div class="dice-face face-1">1</div> <div class="dice-face face-2">2</div>
-                                    <div class="dice-face face-3">3</div> <div class="dice-face face-4">4</div>
-                                    <div class="dice-face face-5">5</div> <div class="dice-face face-6">6</div>
-                                </div>
-                            </div>
-                            <button id="roll-snakes-dice-btn" class="btn btn-primary w-full text-sm mt-2">🐍 ارمي النرد</button>`;
-                        break;
-                    case 'basketball':
-                        gameName = "رميات السلة";
-                        specificUIHTML = `
-                            <p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">اختبر دقتك! هل يمكنك تسجيل ثلاثية؟</p>
-                            <div class="basketball-court">
-                                <div class="hoop"></div>
-                                <div class="net"></div>
-                                <div class="ball" id="basketball-ball"></div>
-                            </div>
-                            <button id="shoot-basketball-btn" class="btn btn-primary w-full text-sm mt-4">🏀 ارمي الكرة</button>`;
-                        break;
-                    case 'quiz':
-                        gameName = "أسئلة عامة";
-                        specificUIHTML = `
-                            <p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">تحدى معلوماتك وأجب على الأسئلة المتنوعة!</p>
-                            <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                <p id="quiz-question" class="font-semibold text-center mb-3">ما هي عاصمة فرنسا؟</p>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <button class="quiz-option-btn btn bg-gray-200 dark:bg-gray-600 text-sm p-2">لندن</button>
-                                    <button class="quiz-option-btn btn bg-gray-200 dark:bg-gray-600 text-sm p-2 correct">باريس</button>
-                                    <button class="quiz-option-btn btn bg-gray-200 dark:bg-gray-600 text-sm p-2">برلين</button>
-                                    <button class="quiz-option-btn btn bg-gray-200 dark:bg-gray-600 text-sm p-2">مدريد</button>
-                                </div>
-                            </div>`;
-                        break;
-                    case 'challenges':
-                         gameName = "تحديات Zowar";
-                         specificUIHTML = `<p class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">أكمل التحديات اليومية والأسبوعية لكسب المكافآت!</p><img src="https://placehold.co/300x150/F0B90B/000000?text=Challenges" class="mx-auto rounded-lg shadow-md">`;
-                         break;
-                    default:
-                        gameName = "لعبة غير معروفة";
-                        specificUIHTML = "<p>تفاصيل اللعبة ستظهر هنا.</p>";
-                }
-                gameLobbyTitle.textContent = gameName;
-                gameSpecificUI.innerHTML = specificUIHTML;
-
-                if (gameType === 'ludo' && getEl('roll-ludo-dice-btn')) {
-                    getEl('roll-ludo-dice-btn').onclick = () => rollDice('ludo-dice');
-                }
-                if (gameType === 'snakes-ladders' && getEl('roll-snakes-dice-btn')) {
-                    getEl('roll-snakes-dice-btn').onclick = () => rollDice('snakes-dice');
-                }
-                if (gameType === 'basketball' && getEl('shoot-basketball-btn')) {
-                    getEl('shoot-basketball-btn').onclick = shootBasketball;
-                }
-                if (gameType === 'quiz') {
-                    querySelAll('.quiz-option-btn').forEach(btn => {
-                        btn.onclick = (e) => checkQuizAnswer(e.target);
-                    });
-                }
-                populateGameLobbyPlayers();
+            chatModal.classList.remove('hidden');
+        }
+        
+        function addMessage(text, isMe) {
+            const chatMessages = document.getElementById('chat-messages');
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-bubble ${isMe ? 'sent' : 'received'}`;
+            
+            if (text.startsWith("VOICE:")) {
+                // رسالة صوتية
+                const duration = text.split(":")[1];
+                messageElement.innerHTML = `
+                    <div class="voice-message">
+                        <div class="waveform">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="ml-2 text-xs">${duration}</span>
+                    </div>
+                `;
+            } else {
+                // رسالة نصية
+                messageElement.textContent = text;
             }
             
-            function rollDice(diceId) {
-                playDiceRollSound();
-                const dice = getEl(diceId);
-                if (!dice) return;
-                const randomNumber = Math.floor(Math.random() * 6) + 1;
-                let xRand = (Math.floor(Math.random() * 4) + 1) * 90; 
-                let yRand = (Math.floor(Math.random() * 4) + 1) * 90;
-                dice.style.transform = `rotateX(${xRand}deg) rotateY(${yRand}deg)`;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const text = messageInput.value.trim();
+            
+            if (text !== '') {
+                addMessage(text, true);
+                messageInput.value = '';
+                
+                // إجابة وهمية بعد ثانية
                 setTimeout(() => {
-                    const faces = dice.querySelectorAll('.dice-face');
-                    faces.forEach(f => f.style.fontWeight = 'normal');
-                    const targetFace = dice.querySelector(`.face-${randomNumber}`);
-                    if(targetFace) targetFace.style.fontWeight = 'bold'; 
-                     showAlert(`لقد رميت ${randomNumber}!`, 'info');
+                    const responses = [
+                        "شكرًا على رسالتك!",
+                        "أنا مشغول الآن، سأرد عليك لاحقًا",
+                        "هل يمكننا التحدث لاحقًا؟",
+                        "أهلاً! كيف يمكنني مساعدتك؟"
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, false);
                 }, 1000);
             }
-
-            function shootBasketball() {
-                playBasketballShootSound();
-                const ball = getEl('basketball-ball');
-                if (!ball) return;
-                ball.classList.add('shooting');
-                setTimeout(() => {
-                    ball.classList.remove('shooting');
-                    const didScore = Math.random() > 0.4; 
-                    showAlert(didScore ? "رائع! لقد سجلت نقطة! 🏀" : "أوه! حاولت جيداً.", didScore ? 'success' : 'info');
-                }, 700);
-            }
-
-            function checkQuizAnswer(selectedButton) {
-                querySelAll('.quiz-option-btn').forEach(btn => btn.disabled = true); 
-                if (selectedButton.classList.contains('correct')) {
-                    playQuizCorrectSound();
-                    selectedButton.classList.remove('bg-gray-200', 'dark:bg-gray-600');
-                    selectedButton.classList.add('bg-green-500', 'text-white');
-                    showAlert("إجابة صحيحة!", "success");
-                } else {
-                    playQuizWrongSound();
-                    selectedButton.classList.remove('bg-gray-200', 'dark:bg-gray-600');
-                    selectedButton.classList.add('bg-red-500', 'text-white');
-                    showAlert("إجابة خاطئة. حاول مرة أخرى في السؤال التالي!", "error");
-                }
-            }
-
-            function populateGameLobbyPlayers() {
-                gameLobbyPlayers.innerHTML = '';
-                const currentUser = mockUsers.find(u => u.id === "currentUser");
-                const players = [currentUser, ...mockUsers.filter(u => u.id !== "currentUser").slice(0,3)]; 
-
-                players.forEach((player, index) => {
-                    const playerDiv = document.createElement('div');
-                    playerDiv.className = 'game-lobby-player text-gray-800 dark:text-gray-100'; 
-                    playerDiv.innerHTML = `
-                        <img src="${player.avatar}" alt="${player.displayName}">
-                        <span>${player.displayName} ${index === 0 ? '(أنت)' : ''}</span>
-                        ${index > 0 ? '<button class="text-xs text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-300 mr-auto rtl:ml-auto rtl:mr-0">إزالة</button>' : ''}`;
-                    gameLobbyPlayers.appendChild(playerDiv);
-                });
-            }
-
-             // --- Tutoring Section Logic ---
-            if (tutoringSection) {
-                tutoringSection.addEventListener('click', (e) => {
-                    const card = e.target.closest('.tutoring-card');
-                    if (card) {
-                        playUiClickSound();
-                        const subject = card.dataset.subject;
-                        tutoringSubjectTitle.textContent = card.querySelector('h3').textContent;
-                        tutoringSubjectContent.textContent = `محتوى تعليمي لـ ${card.querySelector('h3').textContent} سيظهر هنا. يمكنك إضافة دروس، فيديوهات، اختبارات، أو ربط مع مدرسين خصوصيين. (هذه محاكاة).`;
-                        tutoringSubjectDetails.style.display = 'block';
-                        tutoringSubjectDetails.scrollIntoView({behavior: 'smooth'});
-                    }
-                });
-            }
-
-
-            // --- Helper to set active section and hide others ---
-            function setActiveSection(sectionId, isModalTrigger = false) {
-                document.body.className = localStorage.getItem('darkModeZowar') === 'true' ? 'dark-mode' : ''; 
-
-                if (!isModalTrigger || (isModalTrigger && !getEl(sectionId)?.classList.contains('modal-like-section'))) {
-                    sections.forEach(s => s.classList.remove('active'));
-                    views.forEach(v => v.classList.remove('active')); 
-                }
-                
-                if (sectionId !== 'messages-view' && !isModalTrigger) {
-                     messagesView.classList.remove('active');
-                }
-
-                if (sectionId) {
-                    const targetElement = getEl(sectionId);
-                    if (targetElement) {
-                        targetElement.classList.add('active');
-                        document.body.classList.add(`${sectionId}-theme`); 
-                        
-                        navItems.forEach(item => {
-                            const itemSection = item.dataset.section;
-                            const isActive = itemSection === sectionId;
-                            item.classList.toggle('active', isActive);
-                            const icon = item.querySelector('.nav-icon');
-                            const text = item.querySelector('.nav-text');
-                            
-                            if(icon && text) {
-                                let sectionBaseName = sectionId.split('-')[0];
-                                let activeColorVar = `--${sectionBaseName}-accent`;
-                                let activeColorVarDark = `--dark-${sectionBaseName}-accent`;
-                                
-                                // Fallback to global if section specific accent is not defined
-                                let finalActiveColor = getComputedStyle(document.documentElement).getPropertyValue(activeColorVar).trim();
-                                let finalActiveColorDark = getComputedStyle(document.documentElement).getPropertyValue(activeColorVarDark).trim();
-
-                                if (!finalActiveColor) finalActiveColor = 'var(--accent-primary-global)';
-                                if (!finalActiveColorDark) finalActiveColorDark = 'var(--dark-accent-primary-global)';
-
-                                if(isActive) {
-                                    icon.style.color = document.body.classList.contains('dark-mode') ? finalActiveColorDark : finalActiveColor;
-                                    text.style.color = document.body.classList.contains('dark-mode') ? finalActiveColorDark : finalActiveColor;
-                                } else {
-                                    icon.style.color = ''; 
-                                    text.style.color = ''; 
-                                }
-                            }
-                             if (item.classList.contains('create-post-btn')) {
-                                 item.classList.toggle('create-post-btn-active', itemSection === "create-post-section" && sectionId === "create-post-section");
-                            }
-                        });
-                    }
-                } else { 
-                     navItems.forEach(item => {
-                        item.classList.remove('active');
-                        const icon = item.querySelector('.nav-icon');
-                        const text = item.querySelector('.nav-text');
-                        if(icon) icon.style.color = '';
-                        if(text) text.style.color = '';
-                     });
-                     if (messagesView.classList.contains('active')) {
-                        document.body.classList.add('messages-view-theme');
-                     }
-                }
-            }
-        });
+        }
     </script>
 </body>
 </html>
